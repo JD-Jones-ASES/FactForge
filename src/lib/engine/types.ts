@@ -139,6 +139,10 @@ export type FigureSpec =
       hyp: number;
       thetaDeg: number;
       hideTheta?: boolean;
+      /** Hide θ label entirely (Pythagorean / pure side problems). */
+      omitTheta?: boolean;
+      /** Override default adj/opp/hyp captions (e.g. side lengths). */
+      sideCaptions?: { adj: string; opp: string; hyp: string };
     };
 
 /** Optional choice chip for packs with inputKind === 'choice'. */

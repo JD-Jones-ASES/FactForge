@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import { listPacks } from '../lib/engine/registry';
 import { withBase } from '../lib/basePath';
+import { hubBadges, BADGE_LABEL } from '../lib/engine/hubMeta';
+import { HubExtras } from '../components/shell/HubExtras';
 
 const packs = listPacks();
 
@@ -27,6 +29,10 @@ const orderedBands = [
   ...BAND_ORDER.filter((b) => byBand.has(b)),
   ...[...byBand.keys()].filter((b) => !BAND_ORDER.includes(b)),
 ];
+
+function bandId(band: string) {
+  return `band-${band.replace(/\s+/g, '-').toLowerCase()}`;
+}
 ---
 
 <Layout title="FactForge — math packs">
@@ -41,12 +47,23 @@ const orderedBands = [
       <a href={withBase('/builder')}>Builder</a>
       {' '}— snap knobs into a shareable play link (static, no account).
     </p>
+    <HubExtras client:load />
   </section>
+
+  <nav class="band-jump" aria-label="Jump to band">
+    {
+      orderedBands.map((band) => (
+        <a class="band-jump-link" href={`#${bandId(band)}`}>
+          {band}
+        </a>
+      ))
+    }
+  </nav>
 
   {
     orderedBands.map((band) => (
-      <section class="band-section" aria-labelledby={`band-${band.replace(/\s+/g, '-').toLowerCase()}`}>
-        <h2 class="band-heading" id={`band-${band.replace(/\s+/g, '-').toLowerCase()}`} data-band={band}>
+      <section class="band-section" aria-labelledby={bandId(band)}>
+        <h2 class="band-heading" id={bandId(band)} data-band={band}>
           {band}
         </h2>
         <div class="pack-grid" aria-label={`${band} packs`}>
@@ -59,6 +76,11 @@ const orderedBands = [
               <span class="pack-band">{pack.band}</span>
               <h3>{pack.title}</h3>
               <p>{pack.blurb}</p>
+              <span class="pack-badges" aria-label="Pack traits">
+                {hubBadges(pack.id).map((b) => (
+                  <span class={`pack-badge pack-badge-${b}`}>{BADGE_LABEL[b]}</span>
+                ))}
+              </span>
               <span class="pack-go">Play →</span>
             </a>
           ))}

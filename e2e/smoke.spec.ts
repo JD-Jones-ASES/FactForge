@@ -9,6 +9,9 @@ test('hub lists packs by band', async ({ page }) => {
   await expect(page.locator('[data-pack="factor-quad"]')).toBeVisible();
   await expect(page.locator('[data-pack="proportion"]')).toBeVisible();
   await expect(page.locator('[data-pack="roots"]')).toBeVisible();
+  await expect(page.locator('[data-pack="pythagorean"]')).toBeVisible();
+  await expect(page.locator('[data-pack="supplementary"]')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: /jump to band/i })).toBeVisible();
 });
 
 test('integer-ops play loop with Enter', async ({ page }) => {
@@ -55,4 +58,11 @@ test('unit-circle offers choice chips including Undefined', async ({ page }) => 
   await page.getByTestId('start-play').click();
   await expect(page.getByTestId('choice-bar')).toBeVisible();
   await expect(page.getByRole('option', { name: 'Undefined' })).toBeVisible();
+});
+
+test('pythagorean shows figure', async ({ page }) => {
+  await page.goto('/play/pythagorean');
+  await page.getByTestId('start-play').click();
+  await expect(page.getByTestId('figure-view')).toBeVisible();
+  await expect(page.getByTestId('relation-display')).toBeVisible();
 });

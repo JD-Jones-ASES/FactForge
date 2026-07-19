@@ -14,6 +14,7 @@ import { triangleSumPack } from '../packs/triangle-sum';
 import { linearPairPack } from '../packs/linear-pair';
 import { verticalAnglesPack } from '../packs/vertical-angles';
 import { complementaryPack } from '../packs/complementary';
+import { supplementaryPack } from '../packs/supplementary';
 import { exteriorAnglePack } from '../packs/exterior-angle';
 import { transversalPack } from '../packs/transversal';
 import { circlesPack } from '../packs/circles';
@@ -22,6 +23,7 @@ import { linearWritePack } from '../packs/linear-write';
 import { linearSystemPack } from '../packs/linear-system';
 import { unitCirclePack } from '../packs/unit-circle';
 import { rightTrigPack } from '../packs/right-trig';
+import { pythagoreanPack } from '../packs/pythagorean';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -43,9 +45,11 @@ const packs: RelationPack<any>[] = [
   linearPairPack,
   verticalAnglesPack,
   complementaryPack,
+  supplementaryPack,
   exteriorAnglePack,
   transversalPack,
   circlesPack,
+  pythagoreanPack,
   unitCirclePack,
   rightTrigPack,
 ];

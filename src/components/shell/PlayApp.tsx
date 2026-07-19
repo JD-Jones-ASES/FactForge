@@ -27,6 +27,7 @@ import { ShareBar } from './ShareBar';
 import { FigureView } from '../display/FigureView';
 import { AnswerInsertBar } from '../inputs/AnswerInsertBar';
 import { applyInsert, insertsFor } from '../../lib/engine/inserts';
+import { LAST_PACK_KEY } from '../../lib/engine/hubMeta';
 
 type Props = { packId: string };
 
@@ -90,6 +91,7 @@ export function PlayApp({ packId }: Props) {
           `factforge-config:${pack.id}`,
           JSON.stringify(parsed),
         );
+        localStorage.setItem(LAST_PACK_KEY, pack.id);
       } catch {
         /* ignore */
       }
@@ -458,26 +460,40 @@ export function PlayApp({ packId }: Props) {
 
         {last && (
           <div className={`feedback ${last.status}`} data-testid="feedback">
-            {last.message}
-            {last.expectedDisplay && last.status !== 'correct' && (
-              <div className="hint-text">Expected: {last.expectedDisplay}</div>
+            {last.status === 'correct_form_hint' && (
+              <div className="feedback-title">Value correct — refine form</div>
+            )}
+            <div className="feedback-body">{last.message}</div>
+            {last.expectedDisplay && last.status === 'correct_form_hint' && (
+              <div className="hint-text">
+                Preferred form: <strong>{last.expectedDisplay}</strong>
+              </div>
+            )}
+            {last.expectedDisplay && last.status === 'incorrect' && (
+              <div className="hint-text">
+                Target: <strong>{last.expectedDisplay}</strong>
+              </div>
             )}
           </div>
         )}
 
-        <div className="btn-row" style={{ justifyContent: 'center' }}>
+        <div className="btn-row reveal-row">
           {!canAdvance && last?.status === 'incorrect' && (
             <button
               ref={showAnswerRef}
               type="button"
-              className="btn btn-ghost"
+              className="btn btn-ghost btn-reveal"
+              data-testid="show-answer"
               onClick={() => setShowAnswer(true)}
             >
               Show answer
+              <span className="btn-reveal-kbd">
+                <kbd>?</kbd>
+              </span>
             </button>
           )}
           {showAnswer && (
-            <span className="mono" style={{ color: 'var(--fg-dim)' }}>
+            <span className="reveal-answer mono" data-testid="revealed-answer">
               {pack.expectedDisplay(session.current, session.config)}
             </span>
           )}

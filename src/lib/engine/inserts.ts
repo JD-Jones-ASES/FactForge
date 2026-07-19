@@ -36,10 +36,12 @@ const PACK_INSERTS: Record<string, InsertToken[]> = {
   'linear-pair': [DEG],
   'vertical-angles': [DEG],
   complementary: [DEG],
+  supplementary: [DEG],
   'exterior-angle': [DEG],
   'linear-system': [SLASH, MINUS],
   'right-trig': [SLASH, MINUS, DEG],
-  'unit-circle': [SQRT, SLASH, MINUS],
+  'unit-circle': [SQRT, SLASH, MINUS, PI],
+  pythagorean: [MINUS],
 };
 
 function kindDefaults(kind: SlotKind): InsertToken[] {

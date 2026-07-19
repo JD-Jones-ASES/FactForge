@@ -32,10 +32,12 @@ describe('registry', () => {
         'linear-pair',
         'linear-system',
         'linear-write',
+        'pythagorean',
         'rationalize',
         'reduce-equiv',
         'right-trig',
         'roots',
+        'supplementary',
         'transversal',
         'triangle-sum',
         'unit-circle',
@@ -539,6 +541,103 @@ describe('unit-circle', () => {
       },
     };
     expect(pack.check(instance, '√2/2', config).status).toBe('correct');
+  });
+
+  it('grades sec/csc and shows radians labels', () => {
+    const pack = getPack('unit-circle')!;
+    const config = pack.parseConfig({
+      functions: ['sec', 'csc', 'cot'],
+      angleUnit: 'radians',
+    });
+    const rng = createRng(3);
+    for (let i = 0; i < 20; i++) {
+      const inst = pack.generate(config, rng);
+      const ans = pack.expectedDisplay(inst, config);
+      expect(pack.check(inst, ans, config).status).toBe('correct');
+      const text = pack
+        .format(inst)
+        .pieces.map((p) => (p.kind === 'text' ? p.text : p.text))
+        .join('');
+      // radians mode should not use bare "30°" style for standard points
+      expect(text).toMatch(/sec|csc|cot/);
+      expect(String(inst.meta?.angleLabel)).toMatch(/π|0/);
+    }
+  });
+
+  it('accepts rationalized 2√3/3 for 2/√3', () => {
+    const pack = getPack('unit-circle')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        fn: { t: 'choice' as const, v: 'sec' },
+        deg: { t: 'int' as const, v: 30 },
+        val: { t: 'choice' as const, v: '2/√3' },
+      },
+      hidden: 'val',
+      meta: {
+        fn: 'sec',
+        deg: 30,
+        val: '2/√3',
+        accepted: ['2/√3', '2√3/3'],
+      },
+    };
+    expect(pack.check(instance, '2√3/3', config).status).toBe('correct');
+  });
+});
+
+describe('supplementary', () => {
+  it('grades A + B = 180°', () => {
+    const pack = getPack('supplementary')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        a: { t: 'frac' as const, v: frac(70, 1) },
+        b: { t: 'frac' as const, v: frac(110, 1) },
+      },
+      hidden: 'b',
+      meta: { a: 70, b: 110 },
+    };
+    expect(pack.check(instance, '110', config).status).toBe('correct');
+    expect(pack.check(instance, '110°', config).status).toBe('correct');
+    expect(pack.format(instance).figure?.kind).toBe('linear-pair');
+  });
+});
+
+describe('pythagorean', () => {
+  it('grades missing side and attaches right-triangle figure', () => {
+    const pack = getPack('pythagorean')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        a: { t: 'frac' as const, v: frac(3, 1) },
+        b: { t: 'frac' as const, v: frac(4, 1) },
+        c: { t: 'frac' as const, v: frac(5, 1) },
+      },
+      hidden: 'c',
+      meta: { a: 3, b: 4, c: 5 },
+    };
+    expect(pack.check(instance, '5', config).status).toBe('correct');
+    const fig = pack.format(instance).figure;
+    expect(fig?.kind).toBe('right-triangle');
+    if (fig?.kind === 'right-triangle') {
+      expect(fig.omitTheta).toBe(true);
+      expect(fig.sideCaptions?.hyp).toBe('?');
+    }
+  });
+
+  it('self-checks generated triples', () => {
+    const pack = getPack('pythagorean')!;
+    const config = pack.defaultConfig();
+    const rng = createRng(11);
+    for (let i = 0; i < 25; i++) {
+      const inst = pack.generate(config, rng);
+      const ans = pack.expectedDisplay(inst, config);
+      expect(pack.check(inst, ans, config).status).toMatch(/correct/);
+      const a = Number(inst.meta?.a);
+      const b = Number(inst.meta?.b);
+      const c = Number(inst.meta?.c);
+      expect(a * a + b * b).toBe(c * c);
+    }
   });
 });
 

@@ -27,7 +27,7 @@ pnpm build
 pnpm test:e2e   # pnpm exec playwright install chromium once
 ```
 
-## Packs (v0.13 · 23 packs)
+## Packs (v0.14 · 25 packs)
 
 | Band | Packs |
 |------|--------|
@@ -36,10 +36,10 @@ pnpm test:e2e   # pnpm exec playwright install chromium once
 | Number structure | GCF & LCM |
 | Proportional | Proportions, Percent of |
 | Algebra | Rationalize, Linear equations, Write a line, Linear systems, Factor, Expand, Powers, Roots |
-| Geometry | Triangle, Linear pair, Vertical, Complementary, Exterior, Transversal, Circles |
-| Trig | Unit circle (chips + Undefined), Right-triangle trig (±0.05) |
+| Geometry | Triangle, Linear pair, Vertical, Complementary, **Supplementary**, Exterior, Transversal, Circles, **Pythagorean** |
+| Trig | Unit circle (sin/cos/tan/**sec/csc/cot**, °/**rad**, chips + Undefined), Right-triangle trig (±0.05) |
 
-**UX:** keyboard-first play · insert bar (`π`, `√`, `y=`, …) · share presets `?c=&play=1`
+**UX:** keyboard-first play · insert bar (`π`, `√`, `y=`, …) · share presets `?c=&play=1` · hub band jump · pack badges · resume last pack · clearer form-hint feedback
 
 ## Add a pack
 
@@ -47,6 +47,7 @@ pnpm test:e2e   # pnpm exec playwright install chromium once
 2. Register in `src/lib/engine/registry.ts`
 3. Optional figure kind in `FigureView` + `FigureSpec`
 4. Optional inserts in `src/lib/engine/inserts.ts`
+5. Optional hub badges in `src/lib/engine/hubMeta.ts`
 
 ## Inspiration (not copies)
 

@@ -47,8 +47,10 @@ Rationale: shared engine + pack registry + iterative content; still one static d
 
 - Systems graph: mark intersection as **P only** — never leak `(?, y)` or `(x, ?)`
 - Circles: exact π form (`6π`), not decimal π
-- Unit circle: discrete table + **Undefined**
+- Unit circle: discrete table + **Undefined**; optional sec/csc/cot + radians labels
+- Hub badges: `src/lib/engine/hubMeta.ts` (figure / chips / exact / approx)
 - No QuestMath stack (no D1/auth/FSRS); no public Pages unless JD approves
+- Prefer local git while Actions quota is tight; private remote only when JD asks
 
 ### Inspiration only
 

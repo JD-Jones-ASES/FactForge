@@ -139,27 +139,51 @@ function RightTriangleFigure({
           stroke="var(--fg-mute)"
           strokeWidth="1.5"
         />
-        <text x={(O.x + Ax) / 2} y={O.y + 18} className="figure-vertex" textAnchor="middle">
-          adj
+        <text
+          x={(O.x + Ax) / 2}
+          y={O.y + 18}
+          className={
+            figure.sideCaptions?.adj === '?'
+              ? 'figure-label blank-label'
+              : 'figure-vertex'
+          }
+          textAnchor="middle"
+        >
+          {figure.sideCaptions?.adj ?? 'adj'}
         </text>
-        <text x={O.x - 18} y={(O.y + By) / 2} className="figure-vertex" textAnchor="middle">
-          opp
+        <text
+          x={O.x - 18}
+          y={(O.y + By) / 2}
+          className={
+            figure.sideCaptions?.opp === '?'
+              ? 'figure-label blank-label'
+              : 'figure-vertex'
+          }
+          textAnchor="middle"
+        >
+          {figure.sideCaptions?.opp ?? 'opp'}
         </text>
         <text
           x={(Ax + Bx) / 2 + 12}
           y={(Ay + By) / 2}
-          className="figure-vertex"
+          className={
+            figure.sideCaptions?.hyp === '?'
+              ? 'figure-label blank-label'
+              : 'figure-vertex'
+          }
         >
-          hyp
+          {figure.sideCaptions?.hyp ?? 'hyp'}
         </text>
-        <text
-          x={O.x + 36}
-          y={O.y - 28}
-          className="figure-angle-letter"
-          textAnchor="middle"
-        >
-          {figure.hideTheta ? 'θ=?' : `θ=${Math.round(figure.thetaDeg)}°`}
-        </text>
+        {!figure.omitTheta && (
+          <text
+            x={O.x + 36}
+            y={O.y - 28}
+            className="figure-angle-letter"
+            textAnchor="middle"
+          >
+            {figure.hideTheta ? 'θ=?' : `θ=${Math.round(figure.thetaDeg)}°`}
+          </text>
+        )}
       </svg>
     </div>
   );
