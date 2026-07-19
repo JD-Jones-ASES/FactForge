@@ -4,6 +4,28 @@ import { listPacks } from '../lib/engine/registry';
 import { withBase } from '../lib/basePath';
 
 const packs = listPacks();
+
+/** Stable band order for hub sections */
+const BAND_ORDER = [
+  'Arithmetic',
+  'Fractions',
+  'Number structure',
+  'Proportional',
+  'Algebra',
+  'Geometry',
+];
+
+const byBand = new Map<string, typeof packs>();
+for (const pack of packs) {
+  const list = byBand.get(pack.band) ?? [];
+  list.push(pack);
+  byBand.set(pack.band, list);
+}
+
+const orderedBands = [
+  ...BAND_ORDER.filter((b) => byBand.has(b)),
+  ...[...byBand.keys()].filter((b) => !BAND_ORDER.includes(b)),
+];
 ---
 
 <Layout title="FactForge — math packs">
@@ -20,16 +42,27 @@ const packs = listPacks();
     </p>
   </section>
 
-  <section class="pack-grid" aria-label="Game packs">
-    {
-      packs.map((pack) => (
-        <a class="pack-card" href={withBase(`/play/${pack.id}`)} data-pack={pack.id}>
-          <span class="pack-band">{pack.band}</span>
-          <h2>{pack.title}</h2>
-          <p>{pack.blurb}</p>
-          <span class="pack-go">Play →</span>
-        </a>
-      ))
-    }
-  </section>
+  {
+    orderedBands.map((band) => (
+      <section class="band-section" aria-labelledby={`band-${band.replace(/\s+/g, '-').toLowerCase()}`}>
+        <h2 class="band-heading" id={`band-${band.replace(/\s+/g, '-').toLowerCase()}`} data-band={band}>
+          {band}
+        </h2>
+        <div class="pack-grid" aria-label={`${band} packs`}>
+          {byBand.get(band)!.map((pack) => (
+            <a
+              class="pack-card"
+              href={withBase(`/play/${pack.id}`)}
+              data-pack={pack.id}
+            >
+              <span class="pack-band">{pack.band}</span>
+              <h3>{pack.title}</h3>
+              <p>{pack.blurb}</p>
+              <span class="pack-go">Play →</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))
+  }
 </Layout>

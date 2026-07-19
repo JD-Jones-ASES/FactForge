@@ -9,6 +9,7 @@ import { linearOnePack } from '../packs/linear-one';
 import { factorQuadPack } from '../packs/factor-quad';
 import { expandQuadPack } from '../packs/expand-quad';
 import { powersPack } from '../packs/powers';
+import { rootsPack } from '../packs/roots';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -22,6 +23,7 @@ const packs: RelationPack<any>[] = [
   factorQuadPack,
   expandQuadPack,
   powersPack,
+  rootsPack,
 ];
 
 export function listPacks(): RelationPack[] {

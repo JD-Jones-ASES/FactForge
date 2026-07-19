@@ -2,38 +2,28 @@
 
 ## Ideal build order (static-first)
 
-| Phase | What | Why first |
-|-------|------|-----------|
-| **0** | Engine + shell skeleton | One play loop, many packs |
-| **1** | Keyboard / focus law | Drill UX is the product |
-| **2** | URL + JSON presets | Multiplies every pack |
-| **3** | Seed packs | Prove the plug-in model |
-| **4** | Expand packs | Curriculum surface area |
-| **5** | Light builder over presets | Snap-together without new modules |
-| **6** | Theme packs (token rebinds) | Skin, not structure |
-| **7** | Geometry + figures | Needs SVG/display layer |
-
-**Not on this path:** backends, accounts, FSRS, adaptive server state.
+| Phase | What | Status |
+|-------|------|--------|
+| 0–5 | Engine, keyboard, presets, packs, builder | **Done** |
+| 6 | Theme packs (token rebinds) | **Done** (Ink + Paper) |
+| 7 | Geometry + figures | **Next major** |
 
 ## Done
 
-### v0.1 — engine + 5 packs + Ink
+- **v0.1–0.3** — engine, 10 packs, keyboard, presets, builder, GCF mix fix
+- **v0.4–0.6** (this cut)
+  - Hub grouped by **band**
+  - Shared `ConfigForm` / `ShareBar`
+  - **Roots** pack (powers dual) → 11 packs
+  - **Paper** light theme + header switcher (localStorage)
 
-### v0.2 — keyboard, presets, GCF/LCM · proportions · percent (8 packs)
+## Next preferred path
 
-### v0.3 (this cut)
+1. **Figure layer** — optional figure on `DisplayModel` + SVG renderer
+2. **Triangle angle sum** pack (first geometry proof)
+3. Optional second geometry pack (linear pair / vertical angles)
+4. Ship hygiene (private remote / Pages) only on request
 
-- **GCF/LCM mix fix:** 2-card reshuffled deck → every pair of mix questions is one GCF + one LCM (short runs no longer all-LCM by chance)
-- Packs: **Expand quadratics**, **Powers** (10 total)
-- **Builder** page (`/builder`) — pack + knobs → play/setup URL + JSON
+## Deliberately not
 
-## Next
-
-1. More packs as needed (order-of-ops bounded, roots, hide-coeff linear)
-2. Optional second theme
-3. Geometry + SVG figures when ready
-
-## Deliberately not FactForge
-
-- QuestMath-style server progress / FSRS / ChatGPT Sites
-- Full CAS / unrestricted symbolic algebra
+- Bulk arithmetic packs, backend progression, full CAS, drag geometry v1

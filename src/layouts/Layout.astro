@@ -1,6 +1,7 @@
 ---
 import '../styles/site.css';
 import { withBase } from '../lib/basePath';
+import { ThemeSwitcher } from '../components/shell/ThemeSwitcher';
 
 interface Props {
   title?: string;
@@ -27,6 +28,17 @@ const {
       rel="stylesheet"
     />
     <title>{title}</title>
+    {/* Apply saved theme before paint to avoid flash */}
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('factforge-theme');
+        if (t === 'ink' || t === 'paper') {
+          document.documentElement.setAttribute('data-theme', t);
+          document.documentElement.style.colorScheme =
+            t === 'paper' ? 'light' : 'dark';
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -36,10 +48,13 @@ const {
         <span>FactForge</span>
         <span class="brand-sub">math packs</span>
       </a>
-      <nav class="site-nav">
-        <a href={withBase('/')}>Hub</a>
-        <a href={withBase('/builder')}>Builder</a>
-      </nav>
+      <div class="header-end">
+        <ThemeSwitcher client:load />
+        <nav class="site-nav">
+          <a href={withBase('/')}>Hub</a>
+          <a href={withBase('/builder')}>Builder</a>
+        </nav>
+      </div>
     </header>
     <main class="site-main" id="main" tabindex="-1">
       <slot />

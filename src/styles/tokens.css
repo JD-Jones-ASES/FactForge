@@ -1,4 +1,5 @@
-/* FactForge design tokens — theme packs rebind these under [data-theme]. */
+/* FactForge design tokens — theme packs rebind under [data-theme]. */
+
 :root,
 [data-theme='ink'] {
   --bg: #0b0e12;
@@ -26,6 +27,35 @@
   --shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
   --nav-h: 3.5rem;
   --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  --bg-wash-1: #1a2838;
+  --bg-wash-2: #152028;
+  --color-scheme: dark;
+}
+
+/* Paper — light theme pack (token rebind only) */
+[data-theme='paper'] {
+  --bg: #f4f0e6;
+  --bg-elevated: #fffcf5;
+  --bg-panel: #fffdf8;
+  --border: #d9d0bf;
+  --border-strong: #b8ad97;
+  --fg: #1c1914;
+  --fg-dim: #5c564c;
+  --fg-mute: #8a8276;
+  --accent: #0d7a6f;
+  --accent-soft: rgba(13, 122, 111, 0.12);
+  --accent-glow: rgba(13, 122, 111, 0.25);
+  --ok: #1f7a3f;
+  --ok-soft: rgba(31, 122, 63, 0.12);
+  --warn: #9a6b00;
+  --warn-soft: rgba(154, 107, 0, 0.12);
+  --bad: #b4232e;
+  --bad-soft: rgba(180, 35, 46, 0.1);
+  --shadow: 0 12px 36px rgba(40, 30, 10, 0.1);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  --bg-wash-1: #e8e0d0;
+  --bg-wash-2: #ddd4c4;
+  --color-scheme: light;
 }
 
 *,
@@ -35,7 +65,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: var(--color-scheme, dark);
 }
 
 body {
@@ -43,8 +73,8 @@ body {
   min-height: 100vh;
   font-family: var(--font-sans);
   background:
-    radial-gradient(1000px 500px at 8% -8%, #1a2838 0%, transparent 55%),
-    radial-gradient(800px 400px at 100% 0%, #152028 0%, transparent 45%),
+    radial-gradient(1000px 500px at 8% -8%, var(--bg-wash-1) 0%, transparent 55%),
+    radial-gradient(800px 400px at 100% 0%, var(--bg-wash-2) 0%, transparent 45%),
     var(--bg);
   color: var(--fg);
   line-height: 1.55;

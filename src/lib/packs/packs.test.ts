@@ -27,6 +27,7 @@ describe('registry', () => {
         'powers',
         'proportion',
         'reduce-equiv',
+        'roots',
       ].sort(),
     );
   });
@@ -297,5 +298,25 @@ describe('powers', () => {
       meta: { base: 2, exp: 3, result: 8 },
     };
     expect(pack.check(instance, '8', config).status).toBe('correct');
+  });
+});
+
+describe('roots', () => {
+  it('evaluates square roots exactly', () => {
+    const pack = getPack('roots')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        index: { t: 'frac' as const, v: frac(2, 1) },
+        radicand: { t: 'frac' as const, v: frac(49, 1) },
+        root: { t: 'frac' as const, v: frac(7, 1) },
+      },
+      hidden: 'root',
+      meta: { index: 2, radicand: 49, root: 7 },
+    };
+    expect(pack.check(instance, '7', config).status).toBe('correct');
+    expect(pack.format(instance).pieces.some((p) => p.kind === 'slot')).toBe(
+      true,
+    );
   });
 });

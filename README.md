@@ -6,7 +6,7 @@ Middle-school arithmetic through intro algebra, over a large subset of the ratio
 
 ## Engineering level: L2 — Product-shaped (lean)
 
-One static site, a pluggable **relation engine**, and **packs** that plug into a shared play shell. Designed so many packs can share one hub; a custom “snap together” builder is planned for v1.1 (schema is pack-driven from day one).
+One static site, a pluggable **relation engine**, and **packs** that plug into a shared play shell. Hub is band-grouped; **Builder** exports shareable preset URLs.
 
 ## Stack
 
@@ -27,22 +27,17 @@ pnpm build
 pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 ```
 
-## Packs (v0.3)
+## Packs (v0.6)
 
-| Pack | Relation |
-|------|----------|
-| Integer ops | `a ⊕ b = c` |
-| Fraction ops | same over ℚ |
-| Reduce & equivalent | form-focused fractions |
-| GCF & LCM | missing GCF or LCM (mix is balanced) |
-| Proportions | `a : b = c : d` |
-| Percent of | `p% of b = c` |
-| Linear one-step | `ax + b = c` |
-| Factor quadratics | expand-check factorizations |
-| Expand quadratics | product → expanded poly |
-| Powers | `bᵉ = r` (exact small integers) |
+| Band | Packs |
+|------|--------|
+| Arithmetic | Integer ops |
+| Fractions | Fraction ops, Reduce & equivalent |
+| Number structure | GCF & LCM |
+| Proportional | Proportions, Percent of |
+| Algebra | Linear, Factor, Expand, Powers, Roots |
 
-**Builder:** `/builder` — pick pack + knobs → shareable play link / JSON.
+**Builder:** `/builder` · **Themes:** Ink (default), Paper (header switcher)
 
 ## Keyboard
 

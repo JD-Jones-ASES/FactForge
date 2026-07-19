@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
 
-test('hub lists packs', async ({ page }) => {
+test('hub lists packs by band', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /missing fact/i })).toBeVisible();
+  await expect(page.locator('[data-band="Arithmetic"]')).toBeVisible();
+  await expect(page.locator('[data-band="Algebra"]')).toBeVisible();
   await expect(page.locator('[data-pack="integer-ops"]')).toBeVisible();
   await expect(page.locator('[data-pack="factor-quad"]')).toBeVisible();
   await expect(page.locator('[data-pack="proportion"]')).toBeVisible();
+  await expect(page.locator('[data-pack="roots"]')).toBeVisible();
 });
 
 test('integer-ops play loop with Enter', async ({ page }) => {
