@@ -7,6 +7,8 @@ import { proportionPack } from '../packs/proportion';
 import { percentOfPack } from '../packs/percent-of';
 import { linearOnePack } from '../packs/linear-one';
 import { factorQuadPack } from '../packs/factor-quad';
+import { expandQuadPack } from '../packs/expand-quad';
+import { powersPack } from '../packs/powers';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -18,6 +20,8 @@ const packs: RelationPack<any>[] = [
   percentOfPack,
   linearOnePack,
   factorQuadPack,
+  expandQuadPack,
+  powersPack,
 ];
 
 export function listPacks(): RelationPack[] {

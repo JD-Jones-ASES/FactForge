@@ -32,3 +32,10 @@ test('preset play=1 skips setup', async ({ page }) => {
   await page.goto('/play/gcf-lcm?c=e30&play=1'); // e30 = {}
   await expect(page.getByTestId('relation-display')).toBeVisible({ timeout: 10_000 });
 });
+
+test('builder page loads packs', async ({ page }) => {
+  await page.goto('/builder');
+  await expect(page.getByRole('heading', { name: /snap a custom drill/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Integer ops' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /open play link/i })).toBeVisible();
+});

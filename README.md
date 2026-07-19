@@ -27,18 +27,22 @@ pnpm build
 pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 ```
 
-## Packs (v0.2)
+## Packs (v0.3)
 
 | Pack | Relation |
 |------|----------|
 | Integer ops | `a ⊕ b = c` |
 | Fraction ops | same over ℚ |
 | Reduce & equivalent | form-focused fractions |
-| GCF & LCM | missing GCF or LCM |
+| GCF & LCM | missing GCF or LCM (mix is balanced) |
 | Proportions | `a : b = c : d` |
 | Percent of | `p% of b = c` |
 | Linear one-step | `ax + b = c` |
 | Factor quadratics | expand-check factorizations |
+| Expand quadratics | product → expanded poly |
+| Powers | `bᵉ = r` (exact small integers) |
+
+**Builder:** `/builder` — pick pack + knobs → shareable play link / JSON.
 
 ## Keyboard
 

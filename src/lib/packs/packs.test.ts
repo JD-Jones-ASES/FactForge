@@ -2,20 +2,29 @@ import { describe, expect, it } from 'vitest';
 import { createRng } from '../math/rng';
 import { listPacks, getPack } from '../engine/registry';
 import { createSession, submitAnswer, nextProblem } from '../engine/session';
-import { expand, parseFactored, formatFactored, quadsEqual } from '../expr/quadratic';
+import {
+  expand,
+  parseFactored,
+  formatFactored,
+  parseQuadratic,
+  quadsEqual,
+} from '../expr/quadratic';
 import type { FactoredForm } from '../expr/quadratic';
 import { frac, formatFrac } from '../math';
+import { resetMixDeck } from './gcf-lcm';
 
 describe('registry', () => {
-  it('ships seed packs including proportional band', () => {
+  it('ships expanded curriculum packs', () => {
     expect(listPacks().map((p) => p.id).sort()).toEqual(
       [
+        'expand-quad',
         'factor-quad',
         'fraction-ops',
         'gcf-lcm',
         'integer-ops',
         'linear-one',
         'percent-of',
+        'powers',
         'proportion',
         'reduce-equiv',
       ].sort(),
@@ -232,5 +241,61 @@ describe('gcf-lcm', () => {
     expect(
       pack.check({ ...base, hidden: 'm', meta: { find: 'm' } }, '36', config).status,
     ).toBe('correct');
+  });
+
+  it('mix mode yields both GCF and LCM within a short run', () => {
+    resetMixDeck();
+    const pack = getPack('gcf-lcm')!;
+    const config = pack.parseConfig({ mode: 'both', max: 60 });
+    const rng = createRng(12345);
+    const finds = new Set<string>();
+    for (let i = 0; i < 4; i++) {
+      finds.add(pack.generate(config, rng).hidden);
+    }
+    expect(finds.has('g')).toBe(true);
+    expect(finds.has('m')).toBe(true);
+  });
+});
+
+describe('expand-quad', () => {
+  it('parses expanded answers', () => {
+    const pack = getPack('expand-quad')!;
+    const config = pack.defaultConfig();
+    const f: FactoredForm = {
+      leading: 1,
+      factors: [
+        { coeff: 1, constant: 2 },
+        { coeff: 1, constant: 3 },
+      ],
+    };
+    const q = expand(f);
+    const instance = {
+      slots: {
+        factored: { t: 'expr' as const, v: '(x+2)(x+3)', meta: f },
+        expanded: { t: 'expr' as const, v: 'x² + 5x + 6', meta: q },
+      },
+      hidden: 'expanded',
+      meta: { quadratic: q, factors: f },
+    };
+    expect(pack.check(instance, 'x^2+5x+6', config).status).toBe('correct');
+    expect(pack.check(instance, 'x² + 5x + 6', config).status).toBe('correct');
+    expect(parseQuadratic('2x^2-3x+1')).toEqual({ A: 2, B: -3, C: 1 });
+  });
+});
+
+describe('powers', () => {
+  it('grades result and base', () => {
+    const pack = getPack('powers')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        base: { t: 'frac' as const, v: frac(2, 1) },
+        exp: { t: 'frac' as const, v: frac(3, 1) },
+        result: { t: 'frac' as const, v: frac(8, 1) },
+      },
+      hidden: 'result',
+      meta: { base: 2, exp: 3, result: 8 },
+    };
+    expect(pack.check(instance, '8', config).status).toBe('correct');
   });
 });

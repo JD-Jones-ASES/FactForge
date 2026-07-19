@@ -18,6 +18,30 @@ export type GcfLcmConfig = {
   mode: 'gcd' | 'lcm' | 'both';
 };
 
+/**
+ * Mix mode used independent 50/50 draws, so short runs could be all LCM.
+ * Use a reshuffled 2-card deck so every pair of questions is one GCF + one LCM.
+ */
+const mixDeck: Array<'g' | 'm'> = [];
+
+export function nextFind(
+  mode: GcfLcmConfig['mode'],
+  rng: Rng,
+): 'g' | 'm' {
+  if (mode === 'gcd') return 'g';
+  if (mode === 'lcm') return 'm';
+  if (mixDeck.length === 0) {
+    mixDeck.push('g', 'm');
+    if (rng.bool()) mixDeck.reverse();
+  }
+  return mixDeck.pop()!;
+}
+
+/** Test helper — empty the mix deck between cases. */
+export function resetMixDeck(): void {
+  mixDeck.length = 0;
+}
+
 export const gcfLcmPack: RelationPack<GcfLcmConfig> = {
   id: 'gcf-lcm',
   title: 'GCF & LCM',
@@ -81,14 +105,7 @@ export const gcfLcmPack: RelationPack<GcfLcmConfig> = {
       const b = g * v;
       if (a > config.max || b > config.max) continue;
       const m = lcm(a, b);
-      const find: 'g' | 'm' =
-        config.mode === 'both'
-          ? rng.bool()
-            ? 'g'
-            : 'm'
-          : config.mode === 'gcd'
-            ? 'g'
-            : 'm';
+      const find = nextFind(config.mode, rng);
       return {
         slots: {
           a: { t: 'frac', v: fromInt(a) },

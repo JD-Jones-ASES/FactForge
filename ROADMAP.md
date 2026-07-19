@@ -2,41 +2,36 @@
 
 ## Ideal build order (static-first)
 
-This is the ordering we *should* have followed and now continue:
-
 | Phase | What | Why first |
 |-------|------|-----------|
 | **0** | Engine + shell skeleton | One play loop, many packs |
-| **1** | **Keyboard / focus law** | Human friction kills drills; Enter = next normal action |
-| **2** | **URL + JSON presets** | Multiplies every pack (share, deep link, future builder) without content work |
-| **3** | Seed packs (arithmetic → algebra) | Prove content plugs into shell |
-| **4** | Expand packs on the same engine | Curriculum surface area |
-| **5** | Light builder UI over presets | Snap-together without new pack modules |
+| **1** | Keyboard / focus law | Drill UX is the product |
+| **2** | URL + JSON presets | Multiplies every pack |
+| **3** | Seed packs | Prove the plug-in model |
+| **4** | Expand packs | Curriculum surface area |
+| **5** | Light builder over presets | Snap-together without new modules |
 | **6** | Theme packs (token rebinds) | Skin, not structure |
-| **7** | Geometry + figures | Needs display/graphics capability; after static text relations are thick |
+| **7** | Geometry + figures | Needs SVG/display layer |
 
 **Not on this path:** backends, accounts, FSRS, adaptive server state.
 
 ## Done
 
-### v0.1
+### v0.1 — engine + 5 packs + Ink
 
-- Relation engine + pack registry
-- Five seed packs + Ink theme + exact ℚ grading
+### v0.2 — keyboard, presets, GCF/LCM · proportions · percent (8 packs)
 
-### v0.2 (this cut)
+### v0.3 (this cut)
 
-- Keyboard: form Enter to start, focus handoff answer ↔ Next, Esc clear/setup, hints
-- Skip link, setup as real `<form>`
-- URL `?c=` / `?play=1` presets + setup/play/JSON share + import JSON
-- Packs: **GCF & LCM**, **Proportions**, **Percent of** (8 total)
+- **GCF/LCM mix fix:** 2-card reshuffled deck → every pair of mix questions is one GCF + one LCM (short runs no longer all-LCM by chance)
+- Packs: **Expand quadratics**, **Powers** (10 total)
+- **Builder** page (`/builder`) — pack + knobs → play/setup URL + JSON
 
-## Next (still static)
+## Next
 
-1. More packs: expand↔factor reverse, integer powers/roots (exact), one-step with hide-coefficient, order-of-ops (bounded)
-2. Builder page: pick template + knobs → export link/JSON (UI over existing codecs)
-3. Optional second theme (cyber / sakura tokens only)
-4. Geometry relations **when** we add a figure layer (SVG islands): angle chase, triangle sum, parallel lines, circle arc/central — same missing-fact engine
+1. More packs as needed (order-of-ops bounded, roots, hide-coeff linear)
+2. Optional second theme
+3. Geometry + SVG figures when ready
 
 ## Deliberately not FactForge
 

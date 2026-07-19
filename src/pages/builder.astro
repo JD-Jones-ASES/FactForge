@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { BuilderApp } from '../components/shell/BuilderApp';
+---
+
+<Layout
+  title="Builder · FactForge"
+  description="Snap together a pack preset — shareable link and JSON, no server."
+>
+  <BuilderApp client:only="react">
+    <p slot="fallback" class="hint-text">Loading builder…</p>
+  </BuilderApp>
+</Layout>

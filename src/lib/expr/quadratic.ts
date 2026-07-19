@@ -148,3 +148,61 @@ function parseLinearBody(body: string): LinearFactor | null {
 export function quadsEqual(a: Quadratic, b: Quadratic): boolean {
   return a.A === b.A && a.B === b.B && a.C === b.C;
 }
+
+/**
+ * Parse expanded Ax²+Bx+C forms.
+ * Accepts x^2, x², 2x2, unicode minus, optional spaces, missing terms.
+ */
+export function parseQuadratic(input: string): Quadratic | null {
+  let s = input
+    .trim()
+    .replace(/\s+/g, '')
+    .replace(/−/g, '-')
+    .replace(/²/g, '^2')
+    .replace(/x2/gi, 'x^2')
+    .toLowerCase();
+  if (!s) return null;
+
+  // Normalize: ensure leading sign for term splitting
+  if (s[0] !== '+' && s[0] !== '-') s = '+' + s;
+
+  let A = 0;
+  let B = 0;
+  let C = 0;
+  const termRe = /([+-])([^+-]*)/g;
+  let m: RegExpExecArray | null;
+  let matched = false;
+  while ((m = termRe.exec(s)) !== null) {
+    matched = true;
+    const sign = m[1] === '-' ? -1 : 1;
+    const body = m[2]!;
+    if (!body) return null;
+
+    if (body.includes('x^2')) {
+      const coef = body.replace('x^2', '');
+      if (coef === '' || coef === '+') A = sign * 1;
+      else if (coef === '-') A = sign * -1; // shouldn't happen after split
+      else {
+        const n = parseInt(coef, 10);
+        if (Number.isNaN(n)) return null;
+        A = sign * n;
+      }
+    } else if (body.includes('x')) {
+      const coef = body.replace('x', '');
+      if (coef === '' || coef === '+') B = sign * 1;
+      else if (coef === '-') B = sign * -1;
+      else {
+        const n = parseInt(coef, 10);
+        if (Number.isNaN(n)) return null;
+        B = sign * n;
+      }
+    } else {
+      const n = parseInt(body, 10);
+      if (Number.isNaN(n)) return null;
+      C = sign * n;
+    }
+  }
+  if (!matched) return null;
+  if (A === 0 && B === 0 && C === 0) return null;
+  return { A, B, C };
+}

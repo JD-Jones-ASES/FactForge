@@ -41,6 +41,22 @@
   font-size: 0.85rem;
 }
 
+.site-nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.site-nav a {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.site-nav a:hover {
+  color: var(--accent);
+}
+
 .site-main {
   width: min(960px, 100% - 2rem);
   margin: 0 auto;
