@@ -161,11 +161,12 @@ export const linearSystemPack: RelationPack<LinearSystemConfig> = {
           { m: L1.m.n / L1.m.d, b: L1.b.n / L1.b.d },
           { m: L2.m.n / L2.m.d, b: L2.b.n / L2.b.d },
         ],
+        // Mark intersection only — never print the known coordinate (defeats the drill).
         points: [
           {
             x: x0.n / x0.d,
             y: y0.n / y0.d,
-            label: h === 'x' ? `(?, ${formatFrac(y0)})` : `(${formatFrac(x0)}, ?)`,
+            label: 'P',
           },
         ],
         xMin: -10,

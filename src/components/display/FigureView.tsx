@@ -52,8 +52,12 @@ function UnitCircleFigure({
   const cy = 120;
   const R = 85;
   // 0° at +x, CCW; SVG y increases down
-  const px = cx + R * Math.cos((figure.deg * Math.PI) / 180);
-  const py = cy - R * Math.sin((figure.deg * Math.PI) / 180);
+  const ang = (figure.deg * Math.PI) / 180;
+  const px = cx + R * Math.cos(ang);
+  const py = cy - R * Math.sin(ang);
+  // Degree label just outside the circle on the ray (not on the terminal point)
+  const lx = cx + (R + 18) * Math.cos(ang);
+  const ly = cy - (R + 18) * Math.sin(ang);
   return (
     <div className="figure-wrap" data-testid="figure-view">
       <svg
@@ -76,7 +80,13 @@ function UnitCircleFigure({
         <line x1={cx} y1={cy - R - 10} x2={cx} y2={cy + R + 10} stroke="var(--border-strong)" strokeWidth="1" />
         <line x1={cx} y1={cy} x2={px} y2={py} stroke="var(--warn)" strokeWidth="2" />
         <circle cx={px} cy={py} r="5" fill="var(--warn)" />
-        <text x={px + 10} y={py - 8} className="figure-vertex">
+        <text
+          x={lx}
+          y={ly}
+          className="figure-vertex"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
           {figure.deg}°
         </text>
         <text x={cx + R + 4} y={cy - 6} className="figure-vertex">
@@ -234,10 +244,10 @@ function ParallelTransversalFigure({
   posB.y = yTop + 42;
   posC.y = yBot - 42;
   posD.y = yBot - 42;
-  // Horizontal: clear of transversal (min 50px away from ix at that y)
+  // Horizontal: clear of transversal (min ~58px away from intersection x)
   const away = (ix: number, x: number, side: 'left' | 'right') => {
-    if (side === 'left') return Math.min(x, ix - 52);
-    return Math.max(x, ix + 52);
+    if (side === 'left') return Math.min(x, ix - 58);
+    return Math.max(x, ix + 58);
   };
   posA.x = away(ixTop, posA.x, 'left');
   posB.x = away(ixTop, posB.x, 'right');
@@ -479,20 +489,27 @@ function Line2dFigure({
             />
           );
         })}
-        {(figure.points ?? []).map((p, i) => (
-          <g key={i}>
-            <circle cx={toX(p.x)} cy={toY(p.y)} r="4" fill="var(--warn)" />
-            {p.label && (
-              <text
-                x={toX(p.x) + 8}
-                y={toY(p.y) - 8}
-                className="figure-vertex"
-              >
-                {p.label}
-              </text>
-            )}
-          </g>
-        ))}
+        {(figure.points ?? []).map((p, i) => {
+          const px = toX(p.x);
+          const py = toY(p.y);
+          // Keep point labels slightly off the marker (and off axes when possible)
+          const lx = px + 12;
+          const ly = py - 12;
+          return (
+            <g key={i}>
+              <circle cx={px} cy={py} r="4" fill="var(--warn)" />
+              {p.label && (
+                <text
+                  x={Math.min(W - 14, lx)}
+                  y={Math.max(14, ly)}
+                  className="figure-vertex"
+                >
+                  {p.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
       </svg>
     </div>
   );
@@ -779,10 +796,11 @@ function ExteriorAngleFigure({
   const extClamped = clampPt(ext, size, 12);
   const labA = exteriorLabelPoint(A, B, C, 28, size);
   const labB = exteriorLabelPoint(B, A, C, 28, size);
+  // Exterior measure sits further along the extension, clear of vertex C
   const labE = clampPt(
     {
-      x: C.x + (extClamped.x - C.x) * 0.55 + (A.x - C.x) * 0.08,
-      y: C.y + (extClamped.y - C.y) * 0.55 + (A.y - C.y) * 0.08,
+      x: C.x + (extClamped.x - C.x) * 0.72,
+      y: C.y + (extClamped.y - C.y) * 0.72 - 14,
     },
     size,
     16,
