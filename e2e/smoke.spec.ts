@@ -42,3 +42,10 @@ test('builder page loads packs', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Integer ops' })).toBeVisible();
   await expect(page.getByRole('link', { name: /open play link/i })).toBeVisible();
 });
+
+test('triangle-sum shows figure', async ({ page }) => {
+  await page.goto('/play/triangle-sum');
+  await page.getByTestId('start-play').click();
+  await expect(page.getByTestId('figure-view')).toBeVisible();
+  await expect(page.getByTestId('relation-display')).toBeVisible();
+});

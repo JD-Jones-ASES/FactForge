@@ -10,6 +10,8 @@ import { factorQuadPack } from '../packs/factor-quad';
 import { expandQuadPack } from '../packs/expand-quad';
 import { powersPack } from '../packs/powers';
 import { rootsPack } from '../packs/roots';
+import { triangleSumPack } from '../packs/triangle-sum';
+import { linearPairPack } from '../packs/linear-pair';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -24,6 +26,8 @@ const packs: RelationPack<any>[] = [
   expandQuadPack,
   powersPack,
   rootsPack,
+  triangleSumPack,
+  linearPairPack,
 ];
 
 export function listPacks(): RelationPack[] {

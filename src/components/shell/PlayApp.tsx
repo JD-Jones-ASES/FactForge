@@ -24,6 +24,7 @@ import {
 import { withBase } from '../../lib/basePath';
 import { ConfigForm } from './ConfigForm';
 import { ShareBar } from './ShareBar';
+import { FigureView } from '../display/FigureView';
 
 type Props = { packId: string };
 
@@ -331,6 +332,7 @@ export function PlayApp({ packId }: Props) {
 
       <section className="panel" aria-live="polite">
         <p className="prompt">{display.prompt}</p>
+        {display.figure && <FigureView figure={display.figure} />}
         <div className="relation-display" data-testid="relation-display">
           {display.pieces.map((p, i) =>
             p.kind === 'text' ? (

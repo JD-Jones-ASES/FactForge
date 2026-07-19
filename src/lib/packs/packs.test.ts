@@ -26,8 +26,10 @@ describe('registry', () => {
         'percent-of',
         'powers',
         'proportion',
+        'linear-pair',
         'reduce-equiv',
         'roots',
+        'triangle-sum',
       ].sort(),
     );
   });
@@ -318,5 +320,46 @@ describe('roots', () => {
     expect(pack.format(instance).pieces.some((p) => p.kind === 'slot')).toBe(
       true,
     );
+  });
+});
+
+describe('triangle-sum', () => {
+  it('grades missing angle and attaches a figure', () => {
+    const pack = getPack('triangle-sum')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        A: { t: 'frac' as const, v: frac(50, 1) },
+        B: { t: 'frac' as const, v: frac(60, 1) },
+        C: { t: 'frac' as const, v: frac(70, 1) },
+      },
+      hidden: 'C',
+      meta: { A: 50, B: 60, C: 70 },
+    };
+    expect(pack.check(instance, '70', config).status).toBe('correct');
+    expect(pack.check(instance, '70°', config).status).toBe('correct');
+    const display = pack.format(instance);
+    expect(display.figure?.kind).toBe('triangle-angles');
+    if (display.figure?.kind === 'triangle-angles') {
+      expect(display.figure.labels.C).toBe('?');
+      expect(display.figure.labels.A).toBe('50');
+    }
+  });
+});
+
+describe('linear-pair', () => {
+  it('grades 180° complement', () => {
+    const pack = getPack('linear-pair')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        left: { t: 'frac' as const, v: frac(55, 1) },
+        right: { t: 'frac' as const, v: frac(125, 1) },
+      },
+      hidden: 'right',
+      meta: { left: 55, right: 125 },
+    };
+    expect(pack.check(instance, '125', config).status).toBe('correct');
+    expect(pack.format(instance).figure?.kind).toBe('linear-pair');
   });
 });

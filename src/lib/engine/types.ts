@@ -65,9 +65,30 @@ export type DisplayPiece =
   | { kind: 'text'; text: string }
   | { kind: 'slot'; slotId: string; text: string; hidden: boolean };
 
+/**
+ * Optional static diagram for geometry packs.
+ * Measures may be floats for layout only; grading stays exact integers.
+ */
+export type FigureSpec =
+  | {
+      kind: 'triangle-angles';
+      /** Labels shown at vertices (use '?' for hidden). */
+      labels: { A: string; B: string; C: string };
+      /** Interior angles in degrees (for SVG layout). */
+      measures: { A: number; B: number; C: number };
+    }
+  | {
+      kind: 'linear-pair';
+      leftLabel: string;
+      rightLabel: string;
+      leftDeg: number;
+      rightDeg: number;
+    };
+
 export type DisplayModel = {
   pieces: DisplayPiece[];
   prompt: string;
+  figure?: FigureSpec;
 };
 
 export type RelationPack<C extends Record<string, unknown> = Record<string, unknown>> = {

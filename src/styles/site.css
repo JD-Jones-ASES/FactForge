@@ -268,7 +268,7 @@ select.select-input {
 
 .btn-primary {
   background: var(--accent);
-  color: #06201c;
+  color: var(--bg);
 }
 
 .btn-primary:hover {
@@ -291,6 +291,38 @@ select.select-input {
   flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1rem;
+}
+
+.figure-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.figure-svg {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.figure-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+.figure-label.blank-label {
+  fill: var(--accent);
+  font-weight: 700;
+}
+
+.figure-vertex {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: var(--fg-mute);
 }
 
 .relation-display {

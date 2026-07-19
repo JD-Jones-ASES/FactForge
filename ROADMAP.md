@@ -5,25 +5,25 @@
 | Phase | What | Status |
 |-------|------|--------|
 | 0–5 | Engine, keyboard, presets, packs, builder | **Done** |
-| 6 | Theme packs (token rebinds) | **Done** (Ink + Paper) |
-| 7 | Geometry + figures | **Next major** |
+| 6 | Theme packs (Ink + Paper) | **Done** |
+| 7 | Geometry + figures | **Done v0.7** (foundation + 2 packs) |
 
 ## Done
 
-- **v0.1–0.3** — engine, 10 packs, keyboard, presets, builder, GCF mix fix
-- **v0.4–0.6** (this cut)
-  - Hub grouped by **band**
-  - Shared `ConfigForm` / `ShareBar`
-  - **Roots** pack (powers dual) → 11 packs
-  - **Paper** light theme + header switcher (localStorage)
+- **v0.1–0.6** — platform, 11 number packs, themes, builder
+- **v0.7**
+  - `FigureSpec` on `DisplayModel` + `FigureView` SVG island
+  - Layout helpers (law of sines triangle; linear pair sketch)
+  - Packs: **Triangle angles**, **Linear pair** (Geometry band)
+  - Exact integer degree grading; `°` accepted in input
 
-## Next preferred path
+## Next (optional)
 
-1. **Figure layer** — optional figure on `DisplayModel` + SVG renderer
-2. **Triangle angle sum** pack (first geometry proof)
-3. Optional second geometry pack (linear pair / vertical angles)
-4. Ship hygiene (private remote / Pages) only on request
+1. More geometry: vertical angles, complementary pair, exterior angle
+2. Shared angle-parse helper if more packs share it
+3. Ship hygiene (private remote / Pages) on request
+4. Stop bulk number packs unless a new relation type appears
 
 ## Deliberately not
 
-- Bulk arithmetic packs, backend progression, full CAS, drag geometry v1
+- Backend progression, full CAS, drag-to-measure geometry (v1 is static figures)
