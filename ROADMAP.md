@@ -1,17 +1,25 @@
 # FactForge roadmap
 
-## Done
+## Shipped (v0.13 · tip see git `main`)
 
-- **v0.1–0.10** — platform, 20 packs, geometry figures, insert bar
-- **v0.11–0.13**
-  - **Linear systems** — unique ℚ solution + dual-line graph
-  - **Unit circle** — sin/cos/tan table, choice chips, **Undefined**
-  - **Right-triangle trig** — SOH-CAH-TOA figure, approx grade **±0.05**
-  - Hub band **Trig**
+| Area | Status |
+|------|--------|
+| Engine, keyboard, presets, builder | Done |
+| Themes Ink + Paper | Done |
+| Insert bar (π, √, y=, …) | Done |
+| Geometry figures (SVG `FigureView`) | Done |
+| 23 packs through systems + unit circle + right-trig | Done |
+| Systems graph: **P only** (no leaked coordinate) | Done (post-v0.13 polish) |
+| Transversal label layout (wedge placement) | Done (screenshot-driven) |
 
-## Optional later
+## Optional later (not required for product completeness)
 
-- Parallel-line “name the relationship”
-- Radians mode on unit circle
-- More unit-circle functions (sec/csc/cot)
-- Private remote / Pages
+- Radians mode on unit circle  
+- sec/csc/cot on unit circle  
+- Parallel-line “name the relationship” (choice)  
+- Private GitHub remote / Pages (JD must approve public)  
+- More geometry only if a **new relation type** needs it  
+
+## Deliberately out of scope
+
+Backend, accounts, FSRS, QuestMath stack, full CAS, drag-to-measure geometry.
