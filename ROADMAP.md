@@ -1,6 +1,6 @@
 # FactForge roadmap
 
-## Shipped (v0.14 · tip see git `main`)
+## Shipped (v0.14)
 
 | Area | Status |
 |------|--------|
@@ -8,21 +8,21 @@
 | Themes Ink + Paper | Done |
 | Insert bar (π, √, y=, …) | Done |
 | Geometry figures (SVG `FigureView`) | Done |
-| 25 packs through systems + unit circle + right-trig + pythagorean | Done |
-| Systems graph: **P only** (no leaked coordinate) | Done |
-| Transversal label layout (wedge placement) | Done |
-| Hub: band jump, pack badges, resume last pack | Done (v0.14) |
-| Form-hint / show-answer clarity | Done (v0.14) |
-| Unit circle: sec/csc/cot + radians mode | Done (v0.14) |
-| Supplementary angles, Pythagorean triples | Done (v0.14) |
+| 25 packs (arithmetic → trig) | Done |
+| Systems graph: **P only** | Done |
+| Hub: band jump, badges, resume last pack | Done |
+| Form-hint / show-answer clarity | Done |
+| Unit circle: sec/csc/cot + radians mode | Done |
+| Supplementary angles, Pythagorean triples | Done |
+| GitHub Pages under `/FactForge/` | Done |
 
-## Optional later (not required for product completeness)
+## Optional later
 
-- Parallel-line “name the relationship” (choice)  
-- Private GitHub remote / Pages (JD must approve public; watch Actions quota)  
-- More geometry only if a **new relation type** needs it  
-- Mixed↔improper, exponent laws (if curriculum gap appears)
+- Parallel-line “name the relationship” (choice chips)
+- Mixed ↔ improper fractions
+- Exponent product/quotient laws
+- More packs only when a clear curriculum gap appears
 
 ## Deliberately out of scope
 
-Backend, accounts, FSRS, QuestMath stack, full CAS, drag-to-measure geometry.
+Backend, accounts, spaced-repetition servers, full CAS, drag-to-measure geometry.

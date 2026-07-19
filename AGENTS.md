@@ -1,16 +1,14 @@
 # FactForge — Agent Rules
 
-Parent process: `~/Documents/Grok-Brain` (see that vault’s AGENTS.md).
-
 ## Goal
 
-Modular math practice site: relation packs where the player is given *n−1* facts and supplies the remaining fact. Prefer **exact** grading (ℚ, π, radicals); soft form hints for unreduced fractions unless form is the task. Structure for many packs; **Builder** at `/builder` exports URL/JSON presets (static, no server).
+Modular math practice site: relation packs where the player is given *n−1* facts and supplies the remaining fact. Prefer **exact** grading (ℚ, π, radicals); soft form hints for unreduced fractions unless form is the task. **Builder** at `/builder` exports URL/JSON presets (static, no server).
 
 ## Engineering level
 
 **L2 — Product-shaped (lean)**
 
-Rationale: shared engine + pack registry + iterative content; still one static deployable, no server.
+Shared engine + pack registry + iterative content; one static deployable, no backend.
 
 ## Stack
 
@@ -23,10 +21,10 @@ Rationale: shared engine + pack registry + iterative content; still one static d
 
 - `pnpm dev` — local site
 - `pnpm test` — unit tests
-- `pnpm build` — production build
-- `pnpm test:e2e` — Playwright smoke (reuse server on :4321 if already up)
+- `pnpm build` — production build (`ASTRO_BASE=/FactForge` for Pages check)
+- `pnpm test:e2e` — Playwright smoke
 
-## Notes for Grok
+## Notes for agents
 
 ### Packs & engine
 
@@ -36,22 +34,22 @@ Rationale: shared engine + pack registry + iterative content; still one static d
 - Soft form: `correct_form_hint` when value OK but unreduced (unless pack requires form)
 - Choice packs: `inputKind() === 'choice'` + `answerChoices()` → chip UI in PlayApp
 - Insert bar: `src/lib/engine/inserts.ts` (pack-aware π, √, y=, …)
+- Hub badges: `src/lib/engine/hubMeta.ts`
 
 ### Figures
 
 - Optional `figure` on `DisplayModel`; render in `FigureView.tsx`
 - Labels: prefer clear wedges + leaders; clamp into viewBox; **don’t over-tune**
-- **To “see” a figure:** Playwright screenshot of `[data-testid=figure-view]`, then `read_file` the PNG (multimodal). JD can also attach a screenshot.
+- To inspect a figure: Playwright screenshot of `[data-testid=figure-view]`
 
 ### Product rules (locked)
 
 - Systems graph: mark intersection as **P only** — never leak `(?, y)` or `(x, ?)`
 - Circles: exact π form (`6π`), not decimal π
 - Unit circle: discrete table + **Undefined**; optional sec/csc/cot + radians labels
-- Hub badges: `src/lib/engine/hubMeta.ts` (figure / chips / exact / approx)
-- No QuestMath stack (no D1/auth/FSRS); no public Pages unless JD approves
-- Prefer local git while Actions quota is tight; private remote only when JD asks
+- All in-app links use `withBase(...)` for GitHub Pages base path `/FactForge/`
+- No accounts, no backend, no spaced-repetition server stack
 
 ### Inspiration only
 
-cyber-math-flashcards, fraction-flashcards, factoring; QuestMath five-slot concept only.
+cyber-math-flashcards, fraction-flashcards, factoring — concept only, not code forks.
