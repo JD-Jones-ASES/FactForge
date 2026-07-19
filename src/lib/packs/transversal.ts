@@ -97,11 +97,11 @@ export const transversalPack: RelationPack<TransversalConfig> = {
     const h = instance.hidden;
     const lab = (id: string, v: number) => (h === id ? '?' : String(v));
     return {
-      prompt: `Find ∠${h} (interior region at the parallels)`,
+      prompt: `Find ∠${h}`,
       pieces: [
         {
           kind: 'text',
-          text: '∥ lines cut by a transversal — interiors labeled A–D',
+          text: `Interiors between the ∥ lines: A (top-left), B (top-right), C (bottom-left), D (bottom-right)`,
         },
       ],
       figure: {

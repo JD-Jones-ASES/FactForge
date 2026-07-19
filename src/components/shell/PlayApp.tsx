@@ -25,6 +25,8 @@ import { withBase } from '../../lib/basePath';
 import { ConfigForm } from './ConfigForm';
 import { ShareBar } from './ShareBar';
 import { FigureView } from '../display/FigureView';
+import { AnswerInsertBar } from '../inputs/AnswerInsertBar';
+import { applyInsert, insertsFor } from '../../lib/engine/inserts';
 
 type Props = { packId: string };
 
@@ -305,6 +307,22 @@ export function PlayApp({ packId }: Props) {
   const display = pack.format(session.current);
   const last = session.lastResult;
   const parsedConfig = pack.parseConfig(configRaw) as Record<string, unknown>;
+  const inputKind = pack.inputKind(session.current);
+  const insertTokens = insertsFor(pack.id, inputKind);
+
+  const insertToken = (token: string) => {
+    const el = answerRef.current;
+    const start = el?.selectionStart ?? answer.length;
+    const end = el?.selectionEnd ?? answer.length;
+    const { value: next, caret } = applyInsert(answer, start, end, token);
+    setAnswer(next);
+    requestAnimationFrame(() => {
+      const input = answerRef.current;
+      if (!input) return;
+      input.focus();
+      input.setSelectionRange(caret, caret);
+    });
+  };
 
   return (
     <div className="play-shell" onKeyDown={onPlayKeyDown}>
@@ -344,6 +362,12 @@ export function PlayApp({ packId }: Props) {
             ),
           )}
         </div>
+
+        <AnswerInsertBar
+          tokens={insertTokens}
+          disabled={!!canAdvance}
+          onInsert={insertToken}
+        />
 
         <div className="answer-row">
           <input

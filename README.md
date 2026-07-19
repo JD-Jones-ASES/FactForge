@@ -46,6 +46,11 @@ Next up: systems + graphs, unit circle (Undefined), right-triangle trig (±0.05)
 
 - **Setup:** `Tab` through options · `Space` toggles chips · `Enter` starts  
 - **Play:** `Enter` checks or advances · `Esc` clears answer / returns to setup · `?` shows answer after a miss  
+- **Insert bar:** pack-aware symbols (`π`, `√`, `y=`, `/`, `°`, …) insert at the caret — no need to hunt unicode  
+
+Also make sure parse for circles accepts "pi" when typed - already does. Insert uses π unicode.
+
+Improve transversal format prompt to mention A B C D positions.
 
 ## Share presets (static)
 

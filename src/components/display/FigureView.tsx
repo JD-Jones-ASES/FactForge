@@ -40,18 +40,47 @@ function ParallelTransversalFigure({
 }: {
   figure: Extract<FigureSpec, { kind: 'parallel-transversal' }>;
 }) {
-  const W = 280;
-  const H = 200;
-  const y1 = 60;
-  const y2 = 150;
-  // transversal from top-leftish to bottom-rightish
-  const t1 = { x: 70, y: 28 };
-  const t2 = { x: 210, y: 180 };
-  // intersections with parallels (approximate lerp)
-  const ix1 = 70 + ((y1 - 28) / (180 - 28)) * (210 - 70);
-  const ix2 = 70 + ((y2 - 28) / (180 - 28)) * (210 - 70);
-  const lab = (x: number, y: number, text: string) => (
-    <AngleLabel x={x} y={y} text={text} hidden={text === '?'} />
+  // Roomier frame; labels sit in interior wedges with letter tags clear of both lines.
+  const W = 300;
+  const H = 240;
+  const y1 = 72;
+  const y2 = 168;
+  const t1 = { x: 55, y: 20 };
+  const t2 = { x: 245, y: 220 };
+  const tparam = (y: number) => (y - t1.y) / (t2.y - t1.y);
+  const ixAt = (y: number) => t1.x + tparam(y) * (t2.x - t1.x);
+  const ix1 = ixAt(y1);
+  const ix2 = ixAt(y2);
+
+  // Offset into the interior region (between the parallels), away from the transversal.
+  // A/B under top line; C/D above bottom line.
+  const posA = { x: ix1 - 42, y: y1 + 36 };
+  const posB = { x: ix1 + 42, y: y1 + 36 };
+  const posC = { x: ix2 - 42, y: y2 - 36 };
+  const posD = { x: ix2 + 42, y: y2 - 36 };
+
+  const named = (
+    pos: { x: number; y: number },
+    letter: string,
+    measure: string,
+  ) => (
+    <g>
+      <text
+        x={pos.x}
+        y={pos.y - 14}
+        className="figure-angle-letter"
+        textAnchor="middle"
+        dominantBaseline="middle"
+      >
+        {letter}
+      </text>
+      <AngleLabel
+        x={pos.x}
+        y={pos.y + 6}
+        text={measure}
+        hidden={measure === '?'}
+      />
+    </g>
   );
 
   return (
@@ -62,23 +91,28 @@ function ParallelTransversalFigure({
         width={W}
         height={H}
         role="img"
-        aria-label="Parallel lines cut by a transversal"
+        aria-label="Parallel lines cut by a transversal; interiors A B above, C D below"
       >
-        <line x1={30} y1={y1} x2={W - 30} y2={y1} stroke="var(--accent)" strokeWidth="2" />
-        <line x1={30} y1={y2} x2={W - 30} y2={y2} stroke="var(--accent)" strokeWidth="2" />
-        <line x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke="var(--accent)" strokeWidth="2" />
-        {/* ∥ marks */}
-        <text x={W - 48} y={y1 - 8} className="figure-vertex">
+        <line x1={24} y1={y1} x2={W - 24} y2={y1} stroke="var(--accent)" strokeWidth="2.5" />
+        <line x1={24} y1={y2} x2={W - 24} y2={y2} stroke="var(--accent)" strokeWidth="2.5" />
+        <line x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke="var(--accent)" strokeWidth="2.5" />
+        {/* intersection dots for orientation */}
+        <circle cx={ix1} cy={y1} r="3.5" fill="var(--accent)" />
+        <circle cx={ix2} cy={y2} r="3.5" fill="var(--accent)" />
+        <text x={W - 40} y={y1 - 10} className="figure-vertex">
           ∥
         </text>
-        <text x={W - 48} y={y2 - 8} className="figure-vertex">
+        <text x={W - 40} y={y2 - 10} className="figure-vertex">
           ∥
         </text>
-        {lab(ix1 - 28, y1 + 22, figure.labels.A)}
-        {lab(ix1 + 28, y1 + 22, figure.labels.B)}
-        {lab(ix2 - 28, y2 - 22, figure.labels.C)}
-        {lab(ix2 + 28, y2 - 22, figure.labels.D)}
+        {named(posA, 'A', figure.labels.A)}
+        {named(posB, 'B', figure.labels.B)}
+        {named(posC, 'C', figure.labels.C)}
+        {named(posD, 'D', figure.labels.D)}
       </svg>
+      <p className="figure-caption">
+        Interiors between the parallels: A left / B right (top), C left / D right (bottom)
+      </p>
     </div>
   );
 }
