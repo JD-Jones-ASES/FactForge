@@ -27,7 +27,7 @@ pnpm build
 pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 ```
 
-## Packs (v0.7)
+## Packs (v0.8)
 
 | Band | Packs |
 |------|--------|
@@ -36,11 +36,11 @@ pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 | Number structure | GCF & LCM |
 | Proportional | Proportions, Percent of |
 | Algebra | Linear, Factor, Expand, Powers, Roots |
-| Geometry | Triangle angles, Linear pair (SVG figures) |
+| Geometry | Triangle, Linear pair, Vertical, Complementary, Exterior |
 
 **Builder:** `/builder` · **Themes:** Ink (default), Paper (header switcher)
 
-Geometry packs attach an optional `figure` on the display model; drawing may use floats, grading stays exact integers.
+Geometry packs attach an optional `figure` on the display model; drawing may use floats, grading stays exact integers. Roots use unicode radicals (`∛`, `⁵√`) so indices never look like multipliers.
 
 ## Keyboard
 

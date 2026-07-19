@@ -83,6 +83,25 @@ export type FigureSpec =
       rightLabel: string;
       leftDeg: number;
       rightDeg: number;
+    }
+  | {
+      kind: 'vertical-angles';
+      /** Opposite pair 1, opposite pair 2, and the two adjacent (linear) labels. */
+      labels: { opp1: string; opp2: string; adj1: string; adj2: string };
+      line1Deg: number;
+      line2Deg: number;
+    }
+  | {
+      kind: 'complementary';
+      aLabel: string;
+      bLabel: string;
+      aDeg: number;
+      bDeg: number;
+    }
+  | {
+      kind: 'exterior-angle';
+      labels: { A: string; B: string; E: string };
+      measures: { A: number; B: number; C: number; E: number };
     };
 
 export type DisplayModel = {

@@ -307,9 +307,16 @@ select.select-input {
   border: 1px solid var(--border);
 }
 
+.figure-label-bg {
+  fill: var(--bg-elevated);
+  stroke: var(--border);
+  stroke-width: 1;
+  opacity: 0.95;
+}
+
 .figure-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   fill: var(--fg);
 }

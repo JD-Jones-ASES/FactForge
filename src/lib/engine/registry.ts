@@ -12,6 +12,9 @@ import { powersPack } from '../packs/powers';
 import { rootsPack } from '../packs/roots';
 import { triangleSumPack } from '../packs/triangle-sum';
 import { linearPairPack } from '../packs/linear-pair';
+import { verticalAnglesPack } from '../packs/vertical-angles';
+import { complementaryPack } from '../packs/complementary';
+import { exteriorAnglePack } from '../packs/exterior-angle';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -28,6 +31,9 @@ const packs: RelationPack<any>[] = [
   rootsPack,
   triangleSumPack,
   linearPairPack,
+  verticalAnglesPack,
+  complementaryPack,
+  exteriorAnglePack,
 ];
 
 export function listPacks(): RelationPack[] {

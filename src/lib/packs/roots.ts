@@ -27,9 +27,38 @@ function ipow(base: number, exp: number): number | null {
   return r;
 }
 
-function radicalText(index: Frac, radicandText: string): string {
-  if (index.n === 2 && index.d === 1) return `√${radicandText}`;
-  return `${formatFrac(index)}√${radicandText}`;
+/** Unicode superscript digits for nth-root index (not “3√” multiplication). */
+const SUP: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+  '−': '⁻',
+  '-': '⁻',
+};
+
+function toSuperscript(s: string): string {
+  return [...s].map((ch) => SUP[ch] ?? ch).join('');
+}
+
+/**
+ * Principal nth root as unicode (never bare `3√` which reads as 3×√).
+ * ² → √, ³ → ∛, ⁴ → ∜, else superscript-index + √.
+ */
+export function radicalText(index: Frac, radicandText: string): string {
+  if (index.d !== 1) {
+    return `${toSuperscript(formatFrac(index))}√${radicandText}`;
+  }
+  if (index.n === 2) return `√${radicandText}`;
+  if (index.n === 3) return `∛${radicandText}`;
+  if (index.n === 4) return `∜${radicandText}`;
+  return `${toSuperscript(String(index.n))}√${radicandText}`;
 }
 
 export const rootsPack: RelationPack<RootsConfig> = {
@@ -173,7 +202,7 @@ export const rootsPack: RelationPack<RootsConfig> = {
 
     if (h === 'index') {
       return {
-        prompt: 'Find the index n in ⁿ√a = b',
+        prompt: 'Find the index n on the radical (ⁿ√a = b)',
         pieces: [
           { kind: 'text', text: 'ⁿ√' },
           { kind: 'slot', slotId: 'radicand', text: radStr, hidden: false },

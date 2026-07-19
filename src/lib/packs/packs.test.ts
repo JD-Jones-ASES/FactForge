@@ -26,10 +26,13 @@ describe('registry', () => {
         'percent-of',
         'powers',
         'proportion',
+        'complementary',
+        'exterior-angle',
         'linear-pair',
         'reduce-equiv',
         'roots',
         'triangle-sum',
+        'vertical-angles',
       ].sort(),
     );
   });
@@ -361,5 +364,35 @@ describe('linear-pair', () => {
     };
     expect(pack.check(instance, '125', config).status).toBe('correct');
     expect(pack.format(instance).figure?.kind).toBe('linear-pair');
+  });
+});
+
+describe('roots radical notation', () => {
+  it('uses ∛ not 3√ for cube roots', async () => {
+    const { radicalText } = await import('./roots');
+    expect(radicalText(frac(3, 1), '?')).toBe('∛?');
+    expect(radicalText(frac(3, 1), '64')).toBe('∛64');
+    expect(radicalText(frac(2, 1), '49')).toBe('√49');
+    expect(radicalText(frac(5, 1), '32')).toBe('⁵√32');
+    expect(radicalText(frac(3, 1), '?')).not.toMatch(/^3√/);
+  });
+});
+
+describe('vertical-angles', () => {
+  it('grades opposite equal', () => {
+    const pack = getPack('vertical-angles')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        opp1: { t: 'frac' as const, v: frac(70, 1) },
+        opp2: { t: 'frac' as const, v: frac(70, 1) },
+        adj1: { t: 'frac' as const, v: frac(110, 1) },
+        adj2: { t: 'frac' as const, v: frac(110, 1) },
+      },
+      hidden: 'opp2',
+      meta: { opp: 70, adj: 110 },
+    };
+    expect(pack.check(instance, '70', config).status).toBe('correct');
+    expect(pack.format(instance).figure?.kind).toBe('vertical-angles');
   });
 });
