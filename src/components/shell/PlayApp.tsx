@@ -1,4 +1,12 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import {
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type FormEvent,
+  type KeyboardEvent,
+} from 'react';
 import { getPack } from '../../lib/engine/registry';
 import {
   createSession,
@@ -7,12 +15,20 @@ import {
   accuracy,
   type PlaySession,
 } from '../../lib/engine/session';
-import type { ConfigField, RelationPack } from '../../lib/engine/types';
+import type { RelationPack } from '../../lib/engine/types';
+import {
+  encodeConfigParam,
+  packPresetPath,
+  parsePresetJson,
+  readPresetFromSearch,
+  stringifyPreset,
+  toPresetDocument,
+} from '../../lib/engine/presets';
 import { withBase } from '../../lib/basePath';
 
 type Props = { packId: string };
 
-function loadConfig(pack: RelationPack, fields: ConfigField[]): Record<string, unknown> {
+function loadStoredConfig(pack: RelationPack): Record<string, unknown> {
   const base = pack.defaultConfig() as Record<string, unknown>;
   try {
     const raw = localStorage.getItem(`factforge-config:${pack.id}`);
@@ -39,9 +55,15 @@ function ConfigForm({
     <div className="config-grid">
       {pack.configSchema.map((field) => (
         <div className="config-field" key={field.key}>
-          <label className="field-label">{field.label}</label>
+          <span className="field-label" id={`cfg-label-${field.key}`}>
+            {field.label}
+          </span>
           {field.type === 'multi-ops' && (
-            <div className="chip-row" role="group" aria-label={field.label}>
+            <div
+              className="chip-row"
+              role="group"
+              aria-labelledby={`cfg-label-${field.key}`}
+            >
               {(field.options ?? []).map((opt) => {
                 const selected = Array.isArray(value[field.key])
                   ? (value[field.key] as string[]).includes(opt.value)
@@ -71,10 +93,10 @@ function ConfigForm({
           {(field.type === 'select' || field.type === 'range-select') && (
             <select
               className="select-input"
+              aria-labelledby={`cfg-label-${field.key}`}
               value={String(value[field.key] ?? field.default)}
               onChange={(e) => {
                 const v = e.target.value;
-                // numeric range keys stored as numbers when they look numeric
                 if (field.type === 'range-select' && /^\d+$/.test(v)) {
                   set(field.key, Number(v));
                 } else {
@@ -95,6 +117,7 @@ function ConfigForm({
                 type="button"
                 className="chip"
                 aria-pressed={Boolean(value[field.key])}
+                aria-labelledby={`cfg-label-${field.key}`}
                 onClick={() => set(field.key, !value[field.key])}
               >
                 {value[field.key] ? 'On' : 'Off'}
@@ -108,31 +131,78 @@ function ConfigForm({
   );
 }
 
-function StatsBar({
-  session,
-  now,
-}: {
-  session: PlaySession;
-  now: number;
-}) {
+function StatsBar({ session, now }: { session: PlaySession; now: number }) {
   const elapsed = Math.max(0, Math.floor((now - session.stats.startMs) / 1000));
   const m = Math.floor(elapsed / 60);
   const s = elapsed % 60;
   return (
     <div className="stats-bar" aria-live="polite">
       <span>
-        Time <strong>{m}:{String(s).padStart(2, '0')}</strong>
+        Time <strong>{`${m}:${String(s).padStart(2, '0')}`}</strong>
       </span>
       <span>
         Streak <strong>{session.stats.streak}</strong>
       </span>
       <span>
-        Accuracy{' '}
-        <strong>
-          {accuracy(session.stats)}%
-        </strong>{' '}
-        ({session.stats.correct}/{session.stats.attempts})
+        Accuracy <strong>{accuracy(session.stats)}%</strong> (
+        {session.stats.correct}/{session.stats.attempts})
       </span>
+    </div>
+  );
+}
+
+function ShareBar({
+  packId,
+  config,
+}: {
+  packId: string;
+  config: Record<string, unknown>;
+}) {
+  const [note, setNote] = useState<string | null>(null);
+
+  const flash = (msg: string) => {
+    setNote(msg);
+    window.setTimeout(() => setNote(null), 2000);
+  };
+
+  const copyLink = async (play: boolean) => {
+    const path = packPresetPath(packId, config, { play });
+    const url = `${window.location.origin}${withBase(path)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      flash(play ? 'Play link copied' : 'Setup link copied');
+    } catch {
+      flash('Could not copy — select from address bar');
+    }
+  };
+
+  const copyJson = async () => {
+    const doc = toPresetDocument(packId, config);
+    try {
+      await navigator.clipboard.writeText(stringifyPreset(doc));
+      flash('JSON preset copied');
+    } catch {
+      flash('Could not copy JSON');
+    }
+  };
+
+  return (
+    <div className="share-bar">
+      <span className="share-label">Share</span>
+      <button type="button" className="btn btn-ghost btn-sm" onClick={() => copyLink(false)}>
+        Setup link
+      </button>
+      <button type="button" className="btn btn-ghost btn-sm" onClick={() => copyLink(true)}>
+        Play link
+      </button>
+      <button type="button" className="btn btn-ghost btn-sm" onClick={copyJson}>
+        JSON
+      </button>
+      {note && (
+        <span className="share-note" role="status">
+          {note}
+        </span>
+      )}
     </div>
   );
 }
@@ -147,11 +217,67 @@ export function PlayApp({ packId }: Props) {
   const [answer, setAnswer] = useState('');
   const [now, setNow] = useState(Date.now());
   const [showAnswer, setShowAnswer] = useState(false);
+  const [bootstrapped, setBootstrapped] = useState(false);
+  const [importText, setImportText] = useState('');
+  const [importMsg, setImportMsg] = useState<string | null>(null);
 
+  const answerRef = useRef<HTMLInputElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const startRef = useRef<HTMLButtonElement>(null);
+  const showAnswerRef = useRef<HTMLButtonElement>(null);
+
+  const startWithConfig = useCallback(
+    (config: Record<string, unknown>) => {
+      if (!pack) return;
+      const parsed = pack.parseConfig(config);
+      try {
+        localStorage.setItem(
+          `factforge-config:${pack.id}`,
+          JSON.stringify(parsed),
+        );
+      } catch {
+        /* ignore */
+      }
+      setConfigRaw(parsed as Record<string, unknown>);
+      setSession(createSession(pack, parsed));
+      setAnswer('');
+      setShowAnswer(false);
+      setPhase('play');
+      setNow(Date.now());
+    },
+    [pack],
+  );
+
+  // Bootstrap: URL preset > localStorage > defaults; optional auto-play
   useEffect(() => {
-    if (!pack) return;
-    setConfigRaw(loadConfig(pack, pack.configSchema));
-  }, [pack]);
+    if (!pack || bootstrapped) return;
+    const { config: urlConfig, autoPlay } = readPresetFromSearch(
+      window.location.search,
+    );
+    let next = loadStoredConfig(pack);
+    if (urlConfig) {
+      next = pack.parseConfig({
+        ...(pack.defaultConfig() as Record<string, unknown>),
+        ...urlConfig,
+      }) as Record<string, unknown>;
+    }
+    setConfigRaw(next);
+    setBootstrapped(true);
+    if (autoPlay && urlConfig) {
+      // Defer so state settles
+      queueMicrotask(() => startWithConfig(next));
+    }
+  }, [pack, bootstrapped, startWithConfig]);
+
+  // Sync address bar when config changes (setup phase only)
+  useEffect(() => {
+    if (!pack || !bootstrapped || phase !== 'config') return;
+    const c = encodeConfigParam(pack.parseConfig(configRaw) as Record<string, unknown>);
+    const url = new URL(window.location.href);
+    url.searchParams.set('c', c);
+    url.searchParams.delete('play');
+    window.history.replaceState({}, '', url.toString());
+  }, [pack, configRaw, bootstrapped, phase]);
 
   useEffect(() => {
     if (phase !== 'play') return;
@@ -159,20 +285,99 @@ export function PlayApp({ packId }: Props) {
     return () => clearInterval(id);
   }, [phase]);
 
-  const start = useCallback(() => {
-    if (!pack) return;
-    const config = pack.parseConfig(configRaw);
-    try {
-      localStorage.setItem(`factforge-config:${pack.id}`, JSON.stringify(config));
-    } catch {
-      /* ignore */
+  const canAdvance =
+    session?.lastResult?.status === 'correct' ||
+    session?.lastResult?.status === 'correct_form_hint';
+
+  // Focus handoff: answer ↔ Next / select after miss
+  useEffect(() => {
+    if (phase !== 'play' || !session) return;
+    const last = session.lastResult;
+    if (last && (last.status === 'correct' || last.status === 'correct_form_hint')) {
+      nextRef.current?.focus();
+      return;
     }
-    setSession(createSession(pack, config));
+    answerRef.current?.focus();
+    if (last?.status === 'incorrect' || last?.status === 'parse_error') {
+      answerRef.current?.select();
+    }
+  }, [
+    phase,
+    session?.current,
+    session?.lastResult,
+    session?.stats.attempts,
+  ]);
+
+  // Config: focus Start after bootstrap when not auto-playing
+  useEffect(() => {
+    if (phase === 'config' && bootstrapped) {
+      startRef.current?.focus();
+    }
+  }, [phase, bootstrapped]);
+
+  const onSubmitAnswer = useCallback(() => {
+    if (!answer.trim()) return;
+    setSession((s) => (s ? submitAnswer(s, answer) : s));
+    setShowAnswer(false);
+  }, [answer]);
+
+  const onNext = useCallback(() => {
+    setSession((s) => (s ? nextProblem(s) : s));
     setAnswer('');
     setShowAnswer(false);
-    setPhase('play');
-    setNow(Date.now());
-  }, [pack, configRaw]);
+  }, []);
+
+  const goSetup = useCallback(() => {
+    setPhase('config');
+    setSession(null);
+    setAnswer('');
+    setShowAnswer(false);
+  }, []);
+
+  /** Enter / primary action when focus is not in a text field that needs newline. */
+  const onPlayKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (answer.trim() && !canAdvance) {
+        setAnswer('');
+        answerRef.current?.focus();
+      } else {
+        goSetup();
+      }
+      return;
+    }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // Input handles its own Enter; this catches focus on buttons/feedback
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      e.preventDefault();
+      if (canAdvance) onNext();
+      else if (answer.trim()) onSubmitAnswer();
+    }
+    if (e.key === '?' && !canAdvance && session?.lastResult?.status === 'incorrect') {
+      // optional: show answer
+      if (!(e.target as HTMLElement).matches('input, textarea')) {
+        setShowAnswer(true);
+      }
+    }
+  };
+
+  const onImport = () => {
+    if (!pack) return;
+    const doc = parsePresetJson(importText);
+    if (!doc) {
+      setImportMsg('Invalid preset JSON');
+      return;
+    }
+    if (doc.packId !== pack.id) {
+      setImportMsg(`This JSON is for pack “${doc.packId}”`);
+      return;
+    }
+    const parsed = pack.parseConfig(doc.config) as Record<string, unknown>;
+    setConfigRaw(parsed);
+    setImportMsg('Preset applied');
+    setImportText('');
+  };
 
   if (!pack) {
     return (
@@ -195,12 +400,49 @@ export function PlayApp({ packId }: Props) {
         </div>
         <section className="panel">
           <h2>Setup</h2>
-          <ConfigForm pack={pack} value={configRaw} onChange={setConfigRaw} />
-          <div className="btn-row">
-            <button type="button" className="btn btn-primary" onClick={start} data-testid="start-play">
-              Start
-            </button>
-          </div>
+          <form
+            onSubmit={(e: FormEvent) => {
+              e.preventDefault();
+              startWithConfig(configRaw);
+            }}
+          >
+            <ConfigForm pack={pack} value={configRaw} onChange={setConfigRaw} />
+            <p className="kbd-hint">
+              <kbd>Tab</kbd> moves · <kbd>Space</kbd> toggles chips ·{' '}
+              <kbd>Enter</kbd> starts
+            </p>
+            <div className="btn-row">
+              <button
+                ref={startRef}
+                type="submit"
+                className="btn btn-primary"
+                data-testid="start-play"
+              >
+                Start
+              </button>
+            </div>
+          </form>
+          <ShareBar
+            packId={pack.id}
+            config={pack.parseConfig(configRaw) as Record<string, unknown>}
+          />
+          <details className="import-details">
+            <summary>Import JSON preset</summary>
+            <textarea
+              className="import-area"
+              rows={4}
+              placeholder='{ "v": 1, "packId": "…", "config": { … } }'
+              value={importText}
+              onChange={(e) => setImportText(e.target.value)}
+              aria-label="Preset JSON"
+            />
+            <div className="btn-row">
+              <button type="button" className="btn btn-ghost" onClick={onImport}>
+                Apply
+              </button>
+              {importMsg && <span className="hint-text">{importMsg}</span>}
+            </div>
+          </details>
         </section>
       </div>
     );
@@ -208,46 +450,31 @@ export function PlayApp({ packId }: Props) {
 
   const display = pack.format(session.current);
   const last = session.lastResult;
-  const canAdvance =
-    last?.status === 'correct' || last?.status === 'correct_form_hint';
-
-  const onSubmit = () => {
-    if (!answer.trim()) return;
-    setSession((s) => (s ? submitAnswer(s, answer) : s));
-    setShowAnswer(false);
-  };
-
-  const onNext = () => {
-    setSession((s) => (s ? nextProblem(s) : s));
-    setAnswer('');
-    setShowAnswer(false);
-  };
+  const parsedConfig = pack.parseConfig(configRaw) as Record<string, unknown>;
 
   return (
-    <div className="play-shell">
+    <div className="play-shell" onKeyDown={onPlayKeyDown}>
       <div className="play-header">
         <div>
           <p className="pack-band">{pack.band}</p>
           <h1>{pack.title}</h1>
         </div>
         <div className="btn-row" style={{ marginTop: 0 }}>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => {
-              setPhase('config');
-              setSession(null);
-            }}
-          >
+          <button type="button" className="btn btn-ghost" onClick={goSetup}>
             Setup
           </button>
-          <a className="btn btn-ghost" href={withBase('/')} style={{ textDecoration: 'none' }}>
+          <a
+            className="btn btn-ghost"
+            href={withBase('/')}
+            style={{ textDecoration: 'none' }}
+          >
             Hub
           </a>
         </div>
       </div>
 
       <StatsBar session={session} now={now} />
+      <ShareBar packId={pack.id} config={parsedConfig} />
 
       <section className="panel" aria-live="polite">
         <p className="prompt">{display.prompt}</p>
@@ -265,21 +492,24 @@ export function PlayApp({ packId }: Props) {
 
         <div className="answer-row">
           <input
+            ref={answerRef}
             className="answer-input"
             type="text"
             inputMode="text"
             autoComplete="off"
-            autoFocus
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="Your answer"
             value={answer}
             data-testid="answer-input"
-            disabled={canAdvance}
+            disabled={!!canAdvance}
+            aria-label="Answer"
             onChange={(e) => setAnswer(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
                 if (canAdvance) onNext();
-                else onSubmit();
+                else onSubmitAnswer();
               }
             }}
           />
@@ -288,12 +518,13 @@ export function PlayApp({ packId }: Props) {
               type="button"
               className="btn btn-primary"
               data-testid="submit-answer"
-              onClick={onSubmit}
+              onClick={onSubmitAnswer}
             >
               Check
             </button>
           ) : (
             <button
+              ref={nextRef}
               type="button"
               className="btn btn-primary"
               data-testid="next-problem"
@@ -303,6 +534,17 @@ export function PlayApp({ packId }: Props) {
             </button>
           )}
         </div>
+
+        <p className="kbd-hint">
+          <kbd>Enter</kbd> {canAdvance ? 'next problem' : 'check answer'} ·{' '}
+          <kbd>Esc</kbd> {answer.trim() && !canAdvance ? 'clear' : 'setup'}
+          {!canAdvance && last?.status === 'incorrect' ? (
+            <>
+              {' '}
+              · <kbd>?</kbd> show answer
+            </>
+          ) : null}
+        </p>
 
         {last && (
           <div className={`feedback ${last.status}`} data-testid="feedback">
@@ -316,6 +558,7 @@ export function PlayApp({ packId }: Props) {
         <div className="btn-row" style={{ justifyContent: 'center' }}>
           {!canAdvance && last?.status === 'incorrect' && (
             <button
+              ref={showAnswerRef}
               type="button"
               className="btn btn-ghost"
               onClick={() => setShowAnswer(true)}

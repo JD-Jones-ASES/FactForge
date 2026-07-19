@@ -29,6 +29,7 @@ const {
     <title>{title}</title>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="brand" href={withBase('/')}>
         <span class="brand-mark">⟨?⟩</span>
@@ -39,7 +40,7 @@ const {
         <a href={withBase('/')}>Hub</a>
       </nav>
     </header>
-    <main class="site-main">
+    <main class="site-main" id="main" tabindex="-1">
       <slot />
     </main>
   </body>

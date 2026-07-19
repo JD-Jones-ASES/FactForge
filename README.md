@@ -27,15 +27,32 @@ pnpm build
 pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 ```
 
-## v1 packs
+## Packs (v0.2)
 
 | Pack | Relation |
 |------|----------|
 | Integer ops | `a ⊕ b = c` |
 | Fraction ops | same over ℚ |
 | Reduce & equivalent | form-focused fractions |
+| GCF & LCM | missing GCF or LCM |
+| Proportions | `a : b = c : d` |
+| Percent of | `p% of b = c` |
 | Linear one-step | `ax + b = c` |
 | Factor quadratics | expand-check factorizations |
+
+## Keyboard
+
+- **Setup:** `Tab` through options · `Space` toggles chips · `Enter` starts  
+- **Play:** `Enter` checks or advances · `Esc` clears answer / returns to setup · `?` shows answer after a miss  
+
+## Share presets (static)
+
+On any pack setup/play page:
+
+- **Setup link** / **Play link** — `?c=<base64url config>&play=1`
+- **JSON** — `{ "v": 1, "packId", "config" }` import under Setup  
+
+No server; links are the entire game.
 
 ## Theme
 

@@ -1,25 +1,42 @@
 # FactForge roadmap
 
-## v0.1 (current)
+## Ideal build order (static-first)
+
+This is the ordering we *should* have followed and now continue:
+
+| Phase | What | Why first |
+|-------|------|-----------|
+| **0** | Engine + shell skeleton | One play loop, many packs |
+| **1** | **Keyboard / focus law** | Human friction kills drills; Enter = next normal action |
+| **2** | **URL + JSON presets** | Multiplies every pack (share, deep link, future builder) without content work |
+| **3** | Seed packs (arithmetic → algebra) | Prove content plugs into shell |
+| **4** | Expand packs on the same engine | Curriculum surface area |
+| **5** | Light builder UI over presets | Snap-together without new pack modules |
+| **6** | Theme packs (token rebinds) | Skin, not structure |
+| **7** | Geometry + figures | Needs display/graphics capability; after static text relations are thick |
+
+**Not on this path:** backends, accounts, FSRS, adaptive server state.
+
+## Done
+
+### v0.1
 
 - Relation engine + pack registry
-- Five seed packs: integer-ops, fraction-ops, reduce-equiv, linear-one, factor-quad
-- Ink theme tokens
-- Shared setup → play → grade → stats shell
-- Exact ℚ grading + soft unreduced form hints
-- Vitest + Playwright smoke
+- Five seed packs + Ink theme + exact ℚ grading
 
-## v1.1 — custom game snap-together
+### v0.2 (this cut)
 
-- Builder UI over existing `configSchema` + relation templates
-- Shareable URL / JSON presets
-- No visual node editor required
+- Keyboard: form Enter to start, focus handoff answer ↔ Next, Esc clear/setup, hints
+- Skip link, setup as real `<form>`
+- URL `?c=` / `?play=1` presets + setup/play/JSON share + import JSON
+- Packs: **GCF & LCM**, **Proportions**, **Percent of** (8 total)
 
-## Later packs (same engine)
+## Next (still static)
 
-- Ratios / proportions, percent of, GCF/LCM, powers/roots (exact small cases)
-- Two-step linear, expand-from-factors reverse of factor-quad
-- Optional theme packs (cyber, sakura) rebinding CSS tokens only
+1. More packs: expand↔factor reverse, integer powers/roots (exact), one-step with hide-coefficient, order-of-ops (bounded)
+2. Builder page: pick template + knobs → export link/JSON (UI over existing codecs)
+3. Optional second theme (cyber / sakura tokens only)
+4. Geometry relations **when** we add a figure layer (SVG islands): angle chase, triangle sum, parallel lines, circle arc/central — same missing-fact engine
 
 ## Deliberately not FactForge
 

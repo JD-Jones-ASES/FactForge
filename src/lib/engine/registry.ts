@@ -2,6 +2,9 @@ import type { RelationPack } from './types';
 import { integerOpsPack } from '../packs/integer-ops';
 import { fractionOpsPack } from '../packs/fraction-ops';
 import { reduceEquivPack } from '../packs/reduce-equiv';
+import { gcfLcmPack } from '../packs/gcf-lcm';
+import { proportionPack } from '../packs/proportion';
+import { percentOfPack } from '../packs/percent-of';
 import { linearOnePack } from '../packs/linear-one';
 import { factorQuadPack } from '../packs/factor-quad';
 
@@ -10,6 +13,9 @@ const packs: RelationPack<any>[] = [
   integerOpsPack,
   fractionOpsPack,
   reduceEquivPack,
+  gcfLcmPack,
+  proportionPack,
+  percentOfPack,
   linearOnePack,
   factorQuadPack,
 ];

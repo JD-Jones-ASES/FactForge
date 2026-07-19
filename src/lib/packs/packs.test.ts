@@ -7,13 +7,16 @@ import type { FactoredForm } from '../expr/quadratic';
 import { frac, formatFrac } from '../math';
 
 describe('registry', () => {
-  it('ships five seed packs', () => {
+  it('ships seed packs including proportional band', () => {
     expect(listPacks().map((p) => p.id).sort()).toEqual(
       [
         'factor-quad',
         'fraction-ops',
+        'gcf-lcm',
         'integer-ops',
         'linear-one',
+        'percent-of',
+        'proportion',
         'reduce-equiv',
       ].sort(),
     );
@@ -173,5 +176,61 @@ describe('session', () => {
     expect(session.stats.streak).toBe(1);
     session = nextProblem(session);
     expect(session.lastResult).toBeNull();
+  });
+});
+
+describe('proportion', () => {
+  it('grades missing term and accepts cross-product equals', () => {
+    const pack = getPack('proportion')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        a: { t: 'frac' as const, v: frac(2, 1) },
+        b: { t: 'frac' as const, v: frac(3, 1) },
+        c: { t: 'frac' as const, v: frac(4, 1) },
+        d: { t: 'frac' as const, v: frac(6, 1) },
+      },
+      hidden: 'd',
+    };
+    expect(pack.check(instance, '6', config).status).toBe('correct');
+    expect(pack.check(instance, '7', config).status).toBe('incorrect');
+  });
+});
+
+describe('percent-of', () => {
+  it('accepts 25 and 25% for percent slot', () => {
+    const pack = getPack('percent-of')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        p: { t: 'frac' as const, v: frac(25, 1) },
+        b: { t: 'frac' as const, v: frac(80, 1) },
+        c: { t: 'frac' as const, v: frac(20, 1) },
+      },
+      hidden: 'p',
+    };
+    expect(pack.check(instance, '25', config).status).toBe('correct');
+    expect(pack.check(instance, '25%', config).status).toBe('correct');
+  });
+});
+
+describe('gcf-lcm', () => {
+  it('grades GCF and LCM', () => {
+    const pack = getPack('gcf-lcm')!;
+    const config = pack.defaultConfig();
+    const base = {
+      slots: {
+        a: { t: 'frac' as const, v: frac(12, 1) },
+        b: { t: 'frac' as const, v: frac(18, 1) },
+        g: { t: 'frac' as const, v: frac(6, 1) },
+        m: { t: 'frac' as const, v: frac(36, 1) },
+      },
+    };
+    expect(
+      pack.check({ ...base, hidden: 'g', meta: { find: 'g' } }, '6', config).status,
+    ).toBe('correct');
+    expect(
+      pack.check({ ...base, hidden: 'm', meta: { find: 'm' } }, '36', config).status,
+    ).toBe('correct');
   });
 });
