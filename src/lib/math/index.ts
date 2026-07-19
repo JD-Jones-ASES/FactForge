@@ -3,3 +3,4 @@ export * from './ops';
 export * from './rng';
 export * from './pi';
 export * from './angle';
+export * from './approx';

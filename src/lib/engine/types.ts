@@ -126,7 +126,23 @@ export type FigureSpec =
       xMax?: number;
       yMin?: number;
       yMax?: number;
+    }
+  | {
+      kind: 'unit-circle';
+      deg: number;
+      fn: string;
+    }
+  | {
+      kind: 'right-triangle';
+      adj: number;
+      opp: number;
+      hyp: number;
+      thetaDeg: number;
+      hideTheta?: boolean;
     };
+
+/** Optional choice chip for packs with inputKind === 'choice'. */
+export type AnswerChoice = { value: string; label: string };
 
 export type DisplayModel = {
   pieces: DisplayPiece[];
@@ -151,6 +167,8 @@ export type RelationPack<C extends Record<string, unknown> = Record<string, unkn
   expectedDisplay(instance: Instance, config: C): string;
   /** Input kind for the current hidden slot. */
   inputKind(instance: Instance): SlotKind;
+  /** Choice chips when inputKind is 'choice' (optional). */
+  answerChoices?(instance: Instance): AnswerChoice[];
 };
 
 export type SessionStats = {

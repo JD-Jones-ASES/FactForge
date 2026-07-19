@@ -27,7 +27,7 @@ pnpm build
 pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 ```
 
-## Packs (v0.10)
+## Packs (v0.13)
 
 | Band | Packs |
 |------|--------|
@@ -35,12 +35,11 @@ pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
 | Fractions | Fraction ops, Reduce & equivalent |
 | Number structure | GCF & LCM |
 | Proportional | Proportions, Percent of |
-| Algebra | Rationalize, Linear solve, Write a line, Factor, Expand, Powers, Roots |
+| Algebra | Rationalize, Linear solve, Write a line, **Systems**, Factor, Expand, Powers, Roots |
 | Geometry | Triangle, Linear pair, Vertical, Complementary, Exterior, Transversal, Circles |
+| **Trig** | **Unit circle** (chips + Undefined), **Right-triangle trig** (±0.05) |
 
-**Builder:** `/builder` · **Themes:** Ink / Paper · Circles need exact **π** (e.g. `6π`)
-
-Next up: systems + graphs, unit circle (Undefined), right-triangle trig (±0.05).
+**Builder:** `/builder` · **Themes:** Ink / Paper · Circles need exact **π** · Insert bar for symbols
 
 ## Keyboard
 

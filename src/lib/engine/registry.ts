@@ -19,6 +19,9 @@ import { transversalPack } from '../packs/transversal';
 import { circlesPack } from '../packs/circles';
 import { rationalizePack } from '../packs/rationalize';
 import { linearWritePack } from '../packs/linear-write';
+import { linearSystemPack } from '../packs/linear-system';
+import { unitCirclePack } from '../packs/unit-circle';
+import { rightTrigPack } from '../packs/right-trig';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -31,6 +34,7 @@ const packs: RelationPack<any>[] = [
   rationalizePack,
   linearOnePack,
   linearWritePack,
+  linearSystemPack,
   factorQuadPack,
   expandQuadPack,
   powersPack,
@@ -42,6 +46,8 @@ const packs: RelationPack<any>[] = [
   exteriorAnglePack,
   transversalPack,
   circlesPack,
+  unitCirclePack,
+  rightTrigPack,
 ];
 
 export function listPacks(): RelationPack[] {

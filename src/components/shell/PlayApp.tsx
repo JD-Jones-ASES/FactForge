@@ -309,6 +309,10 @@ export function PlayApp({ packId }: Props) {
   const parsedConfig = pack.parseConfig(configRaw) as Record<string, unknown>;
   const inputKind = pack.inputKind(session.current);
   const insertTokens = insertsFor(pack.id, inputKind);
+  const choices =
+    inputKind === 'choice' && pack.answerChoices
+      ? pack.answerChoices(session.current)
+      : null;
 
   const insertToken = (token: string) => {
     const el = answerRef.current;
@@ -363,11 +367,36 @@ export function PlayApp({ packId }: Props) {
           )}
         </div>
 
-        <AnswerInsertBar
-          tokens={insertTokens}
-          disabled={!!canAdvance}
-          onInsert={insertToken}
-        />
+        {choices && choices.length > 0 ? (
+          <div
+            className="choice-bar"
+            role="listbox"
+            aria-label="Answer choices"
+            data-testid="choice-bar"
+          >
+            {choices.map((c) => (
+              <button
+                key={c.value}
+                type="button"
+                role="option"
+                className="chip"
+                aria-selected={answer === c.value}
+                disabled={!!canAdvance}
+                onClick={() => {
+                  setAnswer(c.value);
+                }}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <AnswerInsertBar
+            tokens={insertTokens}
+            disabled={!!canAdvance}
+            onInsert={insertToken}
+          />
+        )}
 
         <div className="answer-row">
           <input
@@ -378,7 +407,9 @@ export function PlayApp({ packId }: Props) {
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
-            placeholder="Your answer"
+            placeholder={
+              choices ? 'Pick a chip or type…' : 'Your answer'
+            }
             value={answer}
             data-testid="answer-input"
             disabled={!!canAdvance}

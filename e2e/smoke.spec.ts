@@ -49,3 +49,10 @@ test('triangle-sum shows figure', async ({ page }) => {
   await expect(page.getByTestId('figure-view')).toBeVisible();
   await expect(page.getByTestId('relation-display')).toBeVisible();
 });
+
+test('unit-circle offers choice chips including Undefined', async ({ page }) => {
+  await page.goto('/play/unit-circle');
+  await page.getByTestId('start-play').click();
+  await expect(page.getByTestId('choice-bar')).toBeVisible();
+  await expect(page.getByRole('option', { name: 'Undefined' })).toBeVisible();
+});

@@ -30,12 +30,15 @@ describe('registry', () => {
         'complementary',
         'exterior-angle',
         'linear-pair',
+        'linear-system',
         'linear-write',
         'rationalize',
         'reduce-equiv',
+        'right-trig',
         'roots',
         'transversal',
         'triangle-sum',
+        'unit-circle',
         'vertical-angles',
       ].sort(),
     );
@@ -476,5 +479,79 @@ describe('linear-write', () => {
     };
     expect(pack.check(instance, 'y=2x-3', config).status).toBe('correct');
     expect(pack.check(instance, 'y=2x+1', config).status).toBe('incorrect');
+  });
+});
+
+describe('linear-system', () => {
+  it('self-checks generated solution', () => {
+    const pack = getPack('linear-system')!;
+    const config = pack.defaultConfig();
+    const rng = createRng(42);
+    for (let i = 0; i < 15; i++) {
+      const inst = pack.generate(config, rng);
+      const ans = pack.expectedDisplay(inst, config);
+      expect(pack.check(inst, ans, config).status).toMatch(/correct/);
+      expect(pack.format(inst).figure?.kind).toBe('line-2d');
+    }
+  });
+});
+
+describe('unit-circle', () => {
+  it('accepts Undefined for tan 90°', () => {
+    const pack = getPack('unit-circle')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        fn: { t: 'choice' as const, v: 'tan' },
+        deg: { t: 'int' as const, v: 90 },
+        val: { t: 'choice' as const, v: 'Undefined' },
+      },
+      hidden: 'val',
+      meta: {
+        fn: 'tan',
+        deg: 90,
+        val: 'Undefined',
+        accepted: ['Undefined'],
+      },
+    };
+    expect(pack.check(instance, 'Undefined', config).status).toBe('correct');
+    expect(pack.check(instance, 'undefined', config).status).toBe('correct');
+    expect(pack.answerChoices?.(instance).some((c) => c.value === 'Undefined')).toBe(
+      true,
+    );
+  });
+
+  it('accepts √2/2 for sin 45°', () => {
+    const pack = getPack('unit-circle')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        fn: { t: 'choice' as const, v: 'sin' },
+        deg: { t: 'int' as const, v: 45 },
+        val: { t: 'choice' as const, v: '√2/2' },
+      },
+      hidden: 'val',
+      meta: {
+        fn: 'sin',
+        deg: 45,
+        val: '√2/2',
+        accepted: ['√2/2'],
+      },
+    };
+    expect(pack.check(instance, '√2/2', config).status).toBe('correct');
+  });
+});
+
+describe('right-trig', () => {
+  it('grades with ±0.05 tolerance', () => {
+    const pack = getPack('right-trig')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: { ans: { t: 'frac' as const, v: frac(5, 1) } },
+      hidden: 'ans',
+      meta: { trueValue: 5.02, adj: 3, opp: 4, hyp: 5, theta: 53, ask: 'side' },
+    };
+    expect(pack.check(instance, '5.0', config).status).toBe('correct');
+    expect(pack.check(instance, '5.1', config).status).toBe('incorrect');
   });
 });

@@ -32,7 +32,127 @@ export function FigureView({ figure }: { figure: FigureSpec }) {
   if (figure.kind === 'line-2d') {
     return <Line2dFigure figure={figure} />;
   }
+  if (figure.kind === 'unit-circle') {
+    return <UnitCircleFigure figure={figure} />;
+  }
+  if (figure.kind === 'right-triangle') {
+    return <RightTriangleFigure figure={figure} />;
+  }
   return null;
+}
+
+function UnitCircleFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'unit-circle' }>;
+}) {
+  const W = 240;
+  const H = 240;
+  const cx = 120;
+  const cy = 120;
+  const R = 85;
+  // 0° at +x, CCW; SVG y increases down
+  const px = cx + R * Math.cos((figure.deg * Math.PI) / 180);
+  const py = cy - R * Math.sin((figure.deg * Math.PI) / 180);
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg
+        className="figure-svg"
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        role="img"
+        aria-label={`Unit circle at ${figure.deg}° for ${figure.fn}`}
+      >
+        <circle
+          cx={cx}
+          cy={cy}
+          r={R}
+          fill="var(--accent-soft)"
+          stroke="var(--accent)"
+          strokeWidth="2"
+        />
+        <line x1={cx - R - 10} y1={cy} x2={cx + R + 10} y2={cy} stroke="var(--border-strong)" strokeWidth="1" />
+        <line x1={cx} y1={cy - R - 10} x2={cx} y2={cy + R + 10} stroke="var(--border-strong)" strokeWidth="1" />
+        <line x1={cx} y1={cy} x2={px} y2={py} stroke="var(--warn)" strokeWidth="2" />
+        <circle cx={px} cy={py} r="5" fill="var(--warn)" />
+        <text x={px + 10} y={py - 8} className="figure-vertex">
+          {figure.deg}°
+        </text>
+        <text x={cx + R + 4} y={cy - 6} className="figure-vertex">
+          1
+        </text>
+      </svg>
+      <p className="figure-caption">
+        {figure.fn}({figure.deg}°) on the unit circle
+      </p>
+    </div>
+  );
+}
+
+function RightTriangleFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'right-triangle' }>;
+}) {
+  const W = 280;
+  const H = 220;
+  // Place right angle at origin-ish bottom-left
+  const O = { x: 40, y: 180 };
+  // Scale legs into box
+  const maxLeg = Math.max(figure.adj, figure.opp, 1);
+  const scale = 130 / maxLeg;
+  const Ax = O.x + figure.adj * scale;
+  const Ay = O.y;
+  const Bx = O.x;
+  const By = O.y - figure.opp * scale;
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg
+        className="figure-svg"
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        role="img"
+        aria-label="Right triangle"
+      >
+        <polygon
+          points={`${O.x},${O.y} ${Ax},${Ay} ${Bx},${By}`}
+          fill="var(--accent-soft)"
+          stroke="var(--accent)"
+          strokeWidth="2"
+        />
+        {/* right-angle mark */}
+        <path
+          d={`M ${O.x + 14} ${O.y} L ${O.x + 14} ${O.y - 14} L ${O.x} ${O.y - 14}`}
+          fill="none"
+          stroke="var(--fg-mute)"
+          strokeWidth="1.5"
+        />
+        <text x={(O.x + Ax) / 2} y={O.y + 18} className="figure-vertex" textAnchor="middle">
+          adj
+        </text>
+        <text x={O.x - 18} y={(O.y + By) / 2} className="figure-vertex" textAnchor="middle">
+          opp
+        </text>
+        <text
+          x={(Ax + Bx) / 2 + 12}
+          y={(Ay + By) / 2}
+          className="figure-vertex"
+        >
+          hyp
+        </text>
+        <text
+          x={O.x + 36}
+          y={O.y - 28}
+          className="figure-angle-letter"
+          textAnchor="middle"
+        >
+          {figure.hideTheta ? 'θ=?' : `θ=${Math.round(figure.thetaDeg)}°`}
+        </text>
+      </svg>
+    </div>
+  );
 }
 
 function ParallelTransversalFigure({

@@ -2,22 +2,16 @@
 
 ## Done
 
-- **v0.1–0.8** — platform, 16 packs, geometry figures, themes
-- **v0.9–0.10**
-  - **Transversal** (∥ lines + figure)
-  - **Rationalize denominators** (form required)
-  - **Write a line** (2 pts / slope / ∥ / ⊥ + line figure)
-  - **Circle measures** (r, d, C, A with exact **π**)
-  - `parsePiExpr` helper
+- **v0.1–0.10** — platform, 20 packs, geometry figures, insert bar
+- **v0.11–0.13**
+  - **Linear systems** — unique ℚ solution + dual-line graph
+  - **Unit circle** — sin/cos/tan table, choice chips, **Undefined**
+  - **Right-triangle trig** — SOH-CAH-TOA figure, approx grade **±0.05**
+  - Hub band **Trig**
 
-## Next (planned)
+## Optional later
 
-| Cut | Content |
-|-----|---------|
-| **v0.11** | Linear systems + dual-line graph |
-| **v0.12** | Unit circle + choice / Undefined |
-| **v0.13** | Right-triangle trig + approx (±0.05) |
-
-## Rules
-
-Exact preferred; π exact; approx only where pack declares it.
+- Parallel-line “name the relationship”
+- Radians mode on unit circle
+- More unit-circle functions (sec/csc/cot)
+- Private remote / Pages

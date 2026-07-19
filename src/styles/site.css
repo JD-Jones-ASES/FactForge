@@ -368,6 +368,23 @@ select.select-input {
   cursor: default;
 }
 
+.choice-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0.35rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.choice-bar .chip[aria-selected='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
 .figure-label-bg {
   fill: var(--bg-elevated);
   stroke: var(--border);
