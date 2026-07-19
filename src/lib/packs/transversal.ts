@@ -101,7 +101,7 @@ export const transversalPack: RelationPack<TransversalConfig> = {
       pieces: [
         {
           kind: 'text',
-          text: `Interiors between the ∥ lines: A (top-left), B (top-right), C (bottom-left), D (bottom-right)`,
+          text: 'Alternate interiors equal · consecutive interiors sum to 180°',
         },
       ],
       figure: {

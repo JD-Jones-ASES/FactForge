@@ -40,43 +40,130 @@ function ParallelTransversalFigure({
 }: {
   figure: Extract<FigureSpec, { kind: 'parallel-transversal' }>;
 }) {
-  // Roomier frame; labels sit in interior wedges with letter tags clear of both lines.
-  const W = 300;
-  const H = 240;
-  const y1 = 72;
-  const y2 = 168;
-  const t1 = { x: 55, y: 20 };
-  const t2 = { x: 245, y: 220 };
-  const tparam = (y: number) => (y - t1.y) / (t2.y - t1.y);
-  const ixAt = (y: number) => t1.x + tparam(y) * (t2.x - t1.x);
-  const ix1 = ixAt(y1);
-  const ix2 = ixAt(y2);
+  /**
+   *   A = top-left interior   B = top-right interior
+   *   C = bottom-left interior D = bottom-right interior
+   *
+   * Labels placed along the angle bisector of each interior wedge so they
+   * cannot sit on the transversal (screenshot-verified layout).
+   */
+  const W = 340;
+  const H = 300;
+  const yTop = 90;
+  const yBot = 220;
+  // Steeper visual but still clear; long parallels
+  const t1 = { x: 95, y: 35 };
+  const t2 = { x: 245, y: 275 };
+  const ixAt = (y: number) => {
+    const t = (y - t1.y) / (t2.y - t1.y);
+    return t1.x + t * (t2.x - t1.x);
+  };
+  const ixTop = ixAt(yTop);
+  const ixBot = ixAt(yBot);
 
-  // Offset into the interior region (between the parallels), away from the transversal.
-  // A/B under top line; C/D above bottom line.
-  const posA = { x: ix1 - 42, y: y1 + 36 };
-  const posB = { x: ix1 + 42, y: y1 + 36 };
-  const posC = { x: ix2 - 42, y: y2 - 36 };
-  const posD = { x: ix2 + 42, y: y2 - 36 };
+  // Transversal unit direction (down-right) and left/right normals
+  const tdx = t2.x - t1.x;
+  const tdy = t2.y - t1.y;
+  const tlen = Math.hypot(tdx, tdy) || 1;
+  const ux = tdx / tlen;
+  const uy = tdy / tlen;
+  // rotate 90° CCW = "left" when traveling along transversal
+  const leftX = -uy;
+  const leftY = ux;
+  const rightX = uy;
+  const rightY = -ux;
+
+  const unit = (x: number, y: number) => {
+    const L = Math.hypot(x, y) || 1;
+    return { x: x / L, y: y / L };
+  };
+  const place = (
+    ix: number,
+    iy: number,
+    side: 'left' | 'right',
+    towardInterior: 'down' | 'up',
+    dist: number,
+  ) => {
+    const sx = side === 'left' ? leftX : rightX;
+    const sy = side === 'left' ? leftY : rightY;
+    const iyDir = towardInterior === 'down' ? 1 : -1;
+    // bisect side-of-transversal with vertical into the interior band
+    const b = unit(sx + 0, sy + iyDir * 1.15);
+    return { x: ix + b.x * dist, y: iy + b.y * dist };
+  };
+
+  // Prefer pure horizontal offsets inside the band when the bisector
+  // would pull labels toward the transversal — lock y into the band mid-thirds.
+  const bandLo = yTop + 28;
+  const bandHi = yBot - 28;
+  const clampBand = (p: { x: number; y: number }, prefer: 'top' | 'bot') => ({
+    x: Math.min(W - 36, Math.max(36, p.x)),
+    y:
+      prefer === 'top'
+        ? Math.min(yTop + 70, Math.max(bandLo, p.y))
+        : Math.max(yBot - 70, Math.min(bandHi, p.y)),
+  });
+
+  const posA = clampBand(place(ixTop, yTop, 'left', 'down', 62), 'top');
+  const posB = clampBand(place(ixTop, yTop, 'right', 'down', 62), 'top');
+  const posC = clampBand(place(ixBot, yBot, 'left', 'up', 62), 'bot');
+  const posD = clampBand(place(ixBot, yBot, 'right', 'up', 62), 'bot');
+
+  // Force A/B onto the upper third and C/D onto the lower third so they never meet
+  posA.y = yTop + 42;
+  posB.y = yTop + 42;
+  posC.y = yBot - 42;
+  posD.y = yBot - 42;
+  // Horizontal: clear of transversal (min 50px away from ix at that y)
+  const away = (ix: number, x: number, side: 'left' | 'right') => {
+    if (side === 'left') return Math.min(x, ix - 52);
+    return Math.max(x, ix + 52);
+  };
+  posA.x = away(ixTop, posA.x, 'left');
+  posB.x = away(ixTop, posB.x, 'right');
+  posC.x = away(ixBot, posC.x, 'left');
+  posD.x = away(ixBot, posD.x, 'right');
+
+  const leader = (
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+  ) => {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const len = Math.hypot(dx, dy) || 1;
+    return (
+      <line
+        x1={from.x + (dx / len) * 10}
+        y1={from.y + (dy / len) * 10}
+        x2={to.x - (dx / len) * 24}
+        y2={to.y - (dy / len) * 24}
+        stroke="var(--fg-mute)"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+      />
+    );
+  };
 
   const named = (
     pos: { x: number; y: number },
+    from: { x: number; y: number },
     letter: string,
     measure: string,
   ) => (
     <g>
+      {leader(from, pos)}
       <text
         x={pos.x}
-        y={pos.y - 14}
+        y={pos.y - 16}
         className="figure-angle-letter"
         textAnchor="middle"
         dominantBaseline="middle"
       >
-        {letter}
+        ∠{letter}
       </text>
       <AngleLabel
         x={pos.x}
-        y={pos.y + 6}
+        y={pos.y + 4}
         text={measure}
         hidden={measure === '?'}
       />
@@ -91,27 +178,56 @@ function ParallelTransversalFigure({
         width={W}
         height={H}
         role="img"
-        aria-label="Parallel lines cut by a transversal; interiors A B above, C D below"
+        aria-label="Parallel lines cut by a transversal; ∠A ∠B top interiors, ∠C ∠D bottom interiors"
       >
-        <line x1={24} y1={y1} x2={W - 24} y2={y1} stroke="var(--accent)" strokeWidth="2.5" />
-        <line x1={24} y1={y2} x2={W - 24} y2={y2} stroke="var(--accent)" strokeWidth="2.5" />
-        <line x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke="var(--accent)" strokeWidth="2.5" />
-        {/* intersection dots for orientation */}
-        <circle cx={ix1} cy={y1} r="3.5" fill="var(--accent)" />
-        <circle cx={ix2} cy={y2} r="3.5" fill="var(--accent)" />
-        <text x={W - 40} y={y1 - 10} className="figure-vertex">
+        <rect
+          x={18}
+          y={yTop}
+          width={W - 36}
+          height={yBot - yTop}
+          fill="var(--accent-soft)"
+          opacity={0.3}
+        />
+        <line
+          x1={18}
+          y1={yTop}
+          x2={W - 18}
+          y2={yTop}
+          stroke="var(--accent)"
+          strokeWidth="2.5"
+        />
+        <line
+          x1={18}
+          y1={yBot}
+          x2={W - 18}
+          y2={yBot}
+          stroke="var(--accent)"
+          strokeWidth="2.5"
+        />
+        <line
+          x1={t1.x}
+          y1={t1.y}
+          x2={t2.x}
+          y2={t2.y}
+          stroke="var(--accent)"
+          strokeWidth="2.5"
+        />
+        <circle cx={ixTop} cy={yTop} r="4" fill="var(--accent)" />
+        <circle cx={ixBot} cy={yBot} r="4" fill="var(--accent)" />
+        <text x={W - 34} y={yTop - 10} className="figure-vertex">
           ∥
         </text>
-        <text x={W - 40} y={y2 - 10} className="figure-vertex">
+        <text x={W - 34} y={yBot - 10} className="figure-vertex">
           ∥
         </text>
-        {named(posA, 'A', figure.labels.A)}
-        {named(posB, 'B', figure.labels.B)}
-        {named(posC, 'C', figure.labels.C)}
-        {named(posD, 'D', figure.labels.D)}
+        {named(posA, { x: ixTop, y: yTop }, 'A', figure.labels.A)}
+        {named(posB, { x: ixTop, y: yTop }, 'B', figure.labels.B)}
+        {named(posC, { x: ixBot, y: yBot }, 'C', figure.labels.C)}
+        {named(posD, { x: ixBot, y: yBot }, 'D', figure.labels.D)}
       </svg>
       <p className="figure-caption">
-        Interiors between the parallels: A left / B right (top), C left / D right (bottom)
+        Shaded = between the parallels. Upper intersection: ∠A left, ∠B right.
+        Lower: ∠C left, ∠D right.
       </p>
     </div>
   );
