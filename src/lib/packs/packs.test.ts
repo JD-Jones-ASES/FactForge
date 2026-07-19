@@ -26,11 +26,15 @@ describe('registry', () => {
         'percent-of',
         'powers',
         'proportion',
+        'circles',
         'complementary',
         'exterior-angle',
         'linear-pair',
+        'linear-write',
+        'rationalize',
         'reduce-equiv',
         'roots',
+        'transversal',
         'triangle-sum',
         'vertical-angles',
       ].sort(),
@@ -394,5 +398,83 @@ describe('vertical-angles', () => {
     };
     expect(pack.check(instance, '70', config).status).toBe('correct');
     expect(pack.format(instance).figure?.kind).toBe('vertical-angles');
+  });
+});
+
+describe('transversal', () => {
+  it('uses alternate interior equality', () => {
+    const pack = getPack('transversal')!;
+    const config = pack.defaultConfig();
+    const rng = createRng(1);
+    const inst = pack.generate(config, rng);
+    const ans = pack.expectedDisplay(inst, config).replace(/°/g, '');
+    expect(pack.check(inst, ans, config).status).toMatch(/correct/);
+    expect(pack.format(inst).figure?.kind).toBe('parallel-transversal');
+  });
+});
+
+describe('circles + pi', () => {
+  it('grades circumference as kπ', () => {
+    const pack = getPack('circles')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        r: { t: 'frac' as const, v: frac(3, 1) },
+        d: { t: 'frac' as const, v: frac(6, 1) },
+        C: { t: 'expr' as const, v: '6π' },
+        A: { t: 'expr' as const, v: '9π' },
+      },
+      hidden: 'C',
+      meta: {
+        r: 3,
+        d: 6,
+        C: { coeff: frac(6, 1), hasPi: true },
+        A: { coeff: frac(9, 1), hasPi: true },
+      },
+    };
+    expect(pack.check(instance, '6π', config).status).toBe('correct');
+    expect(pack.check(instance, '6*pi', config).status).toBe('correct');
+    expect(pack.check(instance, '18.84', config).status).toBe('incorrect');
+  });
+});
+
+describe('rationalize', () => {
+  it('accepts rationalized form', () => {
+    const pack = getPack('rationalize')!;
+    const config = pack.defaultConfig();
+    const instance = {
+      slots: {
+        given: { t: 'expr' as const, v: '1/√2' },
+        answer: { t: 'expr' as const, v: '√2/2' },
+      },
+      hidden: 'answer',
+      meta: {
+        accepted: ['√2/2', '(√2)/2'],
+        displayAnswer: '√2/2',
+        prompt: '1/√2',
+      },
+    };
+    // normalize strips to lowercase sqrt→√
+    expect(pack.check(instance, '√2/2', config).status).toBe('correct');
+    expect(pack.check(instance, '1/√2', config).status).toBe('incorrect');
+  });
+});
+
+describe('linear-write', () => {
+  it('parses and grades y=mx+b', () => {
+    const pack = getPack('linear-write')!;
+    const config = pack.defaultConfig();
+    const L = { m: frac(2, 1), b: frac(-3, 1) };
+    const instance = {
+      slots: { line: { t: 'expr' as const, v: 'y = 2x − 3' } },
+      hidden: 'line',
+      meta: {
+        line: L,
+        given: 'test',
+        mode: 'point-slope',
+      },
+    };
+    expect(pack.check(instance, 'y=2x-3', config).status).toBe('correct');
+    expect(pack.check(instance, 'y=2x+1', config).status).toBe('incorrect');
   });
 });

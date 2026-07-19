@@ -15,6 +15,10 @@ import { linearPairPack } from '../packs/linear-pair';
 import { verticalAnglesPack } from '../packs/vertical-angles';
 import { complementaryPack } from '../packs/complementary';
 import { exteriorAnglePack } from '../packs/exterior-angle';
+import { transversalPack } from '../packs/transversal';
+import { circlesPack } from '../packs/circles';
+import { rationalizePack } from '../packs/rationalize';
+import { linearWritePack } from '../packs/linear-write';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -24,7 +28,9 @@ const packs: RelationPack<any>[] = [
   gcfLcmPack,
   proportionPack,
   percentOfPack,
+  rationalizePack,
   linearOnePack,
+  linearWritePack,
   factorQuadPack,
   expandQuadPack,
   powersPack,
@@ -34,6 +40,8 @@ const packs: RelationPack<any>[] = [
   verticalAnglesPack,
   complementaryPack,
   exteriorAnglePack,
+  transversalPack,
+  circlesPack,
 ];
 
 export function listPacks(): RelationPack[] {

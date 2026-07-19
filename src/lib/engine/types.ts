@@ -102,6 +102,30 @@ export type FigureSpec =
       kind: 'exterior-angle';
       labels: { A: string; B: string; E: string };
       measures: { A: number; B: number; C: number; E: number };
+    }
+  | {
+      kind: 'parallel-transversal';
+      /** Interior angles at the two intersections (left/right). */
+      labels: { A: string; B: string; C: string; D: string };
+      seedDeg: number;
+    }
+  | {
+      kind: 'circle-rd';
+      rLabel: string;
+      dLabel: string;
+      showR: boolean;
+      showD: boolean;
+    }
+  | {
+      kind: 'line-2d';
+      /** Line as y = mx + b (float for draw only). */
+      lines: { m: number; b: number; color?: string }[];
+      /** Optional intersection / point markers. */
+      points?: { x: number; y: number; label?: string }[];
+      xMin?: number;
+      xMax?: number;
+      yMin?: number;
+      yMax?: number;
     };
 
 export type DisplayModel = {

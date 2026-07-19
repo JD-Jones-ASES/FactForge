@@ -23,7 +23,209 @@ export function FigureView({ figure }: { figure: FigureSpec }) {
   if (figure.kind === 'exterior-angle') {
     return <ExteriorAngleFigure figure={figure} />;
   }
+  if (figure.kind === 'parallel-transversal') {
+    return <ParallelTransversalFigure figure={figure} />;
+  }
+  if (figure.kind === 'circle-rd') {
+    return <CircleRdFigure figure={figure} />;
+  }
+  if (figure.kind === 'line-2d') {
+    return <Line2dFigure figure={figure} />;
+  }
   return null;
+}
+
+function ParallelTransversalFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'parallel-transversal' }>;
+}) {
+  const W = 280;
+  const H = 200;
+  const y1 = 60;
+  const y2 = 150;
+  // transversal from top-leftish to bottom-rightish
+  const t1 = { x: 70, y: 28 };
+  const t2 = { x: 210, y: 180 };
+  // intersections with parallels (approximate lerp)
+  const ix1 = 70 + ((y1 - 28) / (180 - 28)) * (210 - 70);
+  const ix2 = 70 + ((y2 - 28) / (180 - 28)) * (210 - 70);
+  const lab = (x: number, y: number, text: string) => (
+    <AngleLabel x={x} y={y} text={text} hidden={text === '?'} />
+  );
+
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg
+        className="figure-svg"
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        role="img"
+        aria-label="Parallel lines cut by a transversal"
+      >
+        <line x1={30} y1={y1} x2={W - 30} y2={y1} stroke="var(--accent)" strokeWidth="2" />
+        <line x1={30} y1={y2} x2={W - 30} y2={y2} stroke="var(--accent)" strokeWidth="2" />
+        <line x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke="var(--accent)" strokeWidth="2" />
+        {/* ∥ marks */}
+        <text x={W - 48} y={y1 - 8} className="figure-vertex">
+          ∥
+        </text>
+        <text x={W - 48} y={y2 - 8} className="figure-vertex">
+          ∥
+        </text>
+        {lab(ix1 - 28, y1 + 22, figure.labels.A)}
+        {lab(ix1 + 28, y1 + 22, figure.labels.B)}
+        {lab(ix2 - 28, y2 - 22, figure.labels.C)}
+        {lab(ix2 + 28, y2 - 22, figure.labels.D)}
+      </svg>
+    </div>
+  );
+}
+
+function CircleRdFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'circle-rd' }>;
+}) {
+  const W = 220;
+  const H = 200;
+  const cx = 110;
+  const cy = 100;
+  const R = 70;
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg
+        className="figure-svg"
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        role="img"
+        aria-label="Circle with radius and diameter"
+      >
+        <circle
+          cx={cx}
+          cy={cy}
+          r={R}
+          fill="var(--accent-soft)"
+          stroke="var(--accent)"
+          strokeWidth="2"
+        />
+        {figure.showD && (
+          <line
+            x1={cx - R}
+            y1={cy}
+            x2={cx + R}
+            y2={cy}
+            stroke="var(--fg-dim)"
+            strokeWidth="1.5"
+          />
+        )}
+        <line
+          x1={cx}
+          y1={cy}
+          x2={cx + R}
+          y2={cy}
+          stroke="var(--accent)"
+          strokeWidth="2"
+        />
+        <circle cx={cx} cy={cy} r="3" fill="var(--accent)" />
+        <AngleLabel
+          x={cx + R / 2}
+          y={cy - 16}
+          text={figure.rLabel}
+          hidden={figure.rLabel === '?'}
+          unit=""
+          prefix="r="
+        />
+        {figure.showD && (
+          <AngleLabel
+            x={cx}
+            y={cy + 28}
+            text={figure.dLabel}
+            hidden={figure.dLabel === '?'}
+            unit=""
+            prefix="d="
+          />
+        )}
+      </svg>
+    </div>
+  );
+}
+
+function Line2dFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'line-2d' }>;
+}) {
+  const W = 240;
+  const H = 240;
+  const xMin = figure.xMin ?? -8;
+  const xMax = figure.xMax ?? 8;
+  const yMin = figure.yMin ?? -8;
+  const yMax = figure.yMax ?? 8;
+  const pad = 24;
+  const toX = (x: number) =>
+    pad + ((x - xMin) / (xMax - xMin)) * (W - 2 * pad);
+  const toY = (y: number) =>
+    H - pad - ((y - yMin) / (yMax - yMin)) * (H - 2 * pad);
+  const ox = toX(0);
+  const oy = toY(0);
+
+  const lineSeg = (m: number, b: number) => {
+    // clip line to view box in data coords
+    const yAt = (x: number) => m * x + b;
+    const x1 = xMin;
+    const x2 = xMax;
+    return {
+      x1: toX(x1),
+      y1: toY(yAt(x1)),
+      x2: toX(x2),
+      y2: toY(yAt(x2)),
+    };
+  };
+
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg
+        className="figure-svg"
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        role="img"
+        aria-label="Coordinate plane"
+      >
+        <line x1={pad} y1={oy} x2={W - pad} y2={oy} stroke="var(--border-strong)" strokeWidth="1" />
+        <line x1={ox} y1={pad} x2={ox} y2={H - pad} stroke="var(--border-strong)" strokeWidth="1" />
+        {figure.lines.map((ln, i) => {
+          const s = lineSeg(ln.m, ln.b);
+          return (
+            <line
+              key={i}
+              {...s}
+              stroke="var(--accent)"
+              strokeWidth="2"
+              opacity={0.9}
+            />
+          );
+        })}
+        {(figure.points ?? []).map((p, i) => (
+          <g key={i}>
+            <circle cx={toX(p.x)} cy={toY(p.y)} r="4" fill="var(--warn)" />
+            {p.label && (
+              <text
+                x={toX(p.x) + 8}
+                y={toY(p.y) - 8}
+                className="figure-vertex"
+              >
+                {p.label}
+              </text>
+            )}
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
 }
 
 function TriangleAnglesFigure({
@@ -362,14 +564,18 @@ function AngleLabel({
   y,
   text,
   hidden,
+  unit = '°',
+  prefix = '',
 }: {
   x: number;
   y: number;
   text: string;
   hidden: boolean;
+  unit?: string;
+  prefix?: string;
 }) {
-  const display = text === '?' ? '?' : `${text}°`;
-  // Approximate text width for a background pill so labels stay readable
+  const display =
+    text === '?' ? `${prefix}?` : `${prefix}${text}${unit}`;
   const w = Math.max(28, display.length * 8.5);
   const h = 18;
   return (

@@ -1,17 +1,23 @@
 # FactForge roadmap
 
-## Status
+## Done
 
-Platform (engine, keyboard, presets, builder, themes) + curriculum packs + **geometry figure layer** are in place.
+- **v0.1–0.8** — platform, 16 packs, geometry figures, themes
+- **v0.9–0.10**
+  - **Transversal** (∥ lines + figure)
+  - **Rationalize denominators** (form required)
+  - **Write a line** (2 pts / slope / ∥ / ⊥ + line figure)
+  - **Circle measures** (r, d, C, A with exact **π**)
+  - `parsePiExpr` helper
 
-### v0.8
+## Next (planned)
 
-- **Roots notation fix:** `∛` / `∜` / superscript indices — never bare `3√` (reads as multiply)
-- **Figure labels:** more pad, clamp into viewBox, pill backgrounds so text does not sit on the border
-- Geometry packs: **vertical angles**, **complementary**, **exterior angle** (16 packs total)
+| Cut | Content |
+|-----|---------|
+| **v0.11** | Linear systems + dual-line graph |
+| **v0.12** | Unit circle + choice / Undefined |
+| **v0.13** | Right-triangle trig + approx (±0.05) |
 
-## Optional next
+## Rules
 
-1. Shared `parseAngleInput` already factored — more geometry as needed
-2. Parallel lines + transversal (more complex figure)
-3. Private remote / Pages on request
+Exact preferred; π exact; approx only where pack declares it.
