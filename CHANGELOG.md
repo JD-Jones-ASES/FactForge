@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.1
+
+- CI: `pnpm typecheck` (`tsc --noEmit`) before unit/build
+- e2e: catalog-driven hub + play load for every registered pack
+
 ## 0.14.0
 
 - Hub: sticky band jump, pack trait badges, resume last pack

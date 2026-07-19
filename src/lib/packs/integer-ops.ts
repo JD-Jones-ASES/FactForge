@@ -123,17 +123,19 @@ export const integerOpsPack: RelationPack<IntegerOpsConfig> = {
       allowNegative: false,
     };
   },
-  parseConfig(raw) {
-    const ops = Array.isArray(raw.ops)
-      ? (raw.ops.filter((o) => ALL_OPS.includes(o as BinaryOp)) as BinaryOp[])
-      : ['+', '-', '*'];
+  parseConfig(raw): IntegerOpsConfig {
+    const ops: BinaryOp[] = Array.isArray(raw.ops)
+      ? (raw.ops.filter((o): o is BinaryOp =>
+          ALL_OPS.includes(o as BinaryOp),
+        ) as BinaryOp[])
+      : (['+', '-', '*'] as BinaryOp[]);
     const max = Number(raw.max) || 10;
-    const hideMode =
+    const hideMode: IntegerOpsConfig['hideMode'] =
       raw.hideMode === 'result' || raw.hideMode === 'operand' || raw.hideMode === 'both'
         ? raw.hideMode
         : 'both';
     return {
-      ops: ops.length ? ops : ['+'],
+      ops: ops.length ? ops : (['+'] as BinaryOp[]),
       max: Math.min(50, Math.max(3, max)),
       hideMode,
       allowNegative: Boolean(raw.allowNegative),

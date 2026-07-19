@@ -32,7 +32,9 @@ describe('frac', () => {
 
 describe('parseRational', () => {
   it('parses integers fractions mixed decimals', () => {
-    expect(parseRational('3').ok && parseRational('3').value).toEqual({ n: 3, d: 1 });
+    const three = parseRational('3');
+    expect(three.ok).toBe(true);
+    if (three.ok) expect(three.value).toEqual({ n: 3, d: 1 });
     const f = parseRational('2/4');
     expect(f.ok).toBe(true);
     if (f.ok) {
@@ -40,9 +42,11 @@ describe('parseRational', () => {
       expect(f.reduced).toBe(false);
     }
     const m = parseRational('1 1/2');
-    expect(m.ok && eq(m.value, frac(3, 2))).toBe(true);
+    expect(m.ok).toBe(true);
+    if (m.ok) expect(eq(m.value, frac(3, 2))).toBe(true);
     const d = parseRational('0.5');
-    expect(d.ok && eq(d.value, frac(1, 2))).toBe(true);
+    expect(d.ok).toBe(true);
+    if (d.ok) expect(eq(d.value, frac(1, 2))).toBe(true);
   });
 });
 

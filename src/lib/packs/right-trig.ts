@@ -18,11 +18,10 @@ export type RightTrigConfig = {
 type Problem = {
   prompt: string;
   trueValue: number;
-  /** sides for figure */
-  a: number; // opposite to theta or leg
-  b: number; // adjacent
-  c: number; // hypotenuse
-  thetaDeg: number;
+  adj: number;
+  opp: number;
+  hyp: number;
+  theta: number;
   ask: 'side' | 'angle';
 };
 

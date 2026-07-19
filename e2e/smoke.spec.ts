@@ -1,17 +1,31 @@
 import { test, expect } from '@playwright/test';
+import { listPacks } from '../src/lib/engine/registry';
 
-test('hub lists packs by band', async ({ page }) => {
+test('hub lists every registered pack', async ({ page }) => {
+  const packs = listPacks();
+  expect(packs.length).toBeGreaterThanOrEqual(25);
+
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /missing fact/i })).toBeVisible();
   await expect(page.locator('[data-band="Arithmetic"]')).toBeVisible();
   await expect(page.locator('[data-band="Algebra"]')).toBeVisible();
-  await expect(page.locator('[data-pack="integer-ops"]')).toBeVisible();
-  await expect(page.locator('[data-pack="factor-quad"]')).toBeVisible();
-  await expect(page.locator('[data-pack="proportion"]')).toBeVisible();
-  await expect(page.locator('[data-pack="roots"]')).toBeVisible();
-  await expect(page.locator('[data-pack="pythagorean"]')).toBeVisible();
-  await expect(page.locator('[data-pack="supplementary"]')).toBeVisible();
   await expect(page.getByRole('navigation', { name: /jump to band/i })).toBeVisible();
+
+  for (const pack of packs) {
+    await expect(page.locator(`[data-pack="${pack.id}"]`)).toBeVisible();
+  }
+});
+
+test('each pack play route loads without pageerror', async ({ page }) => {
+  for (const pack of listPacks()) {
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(`${pack.id}: ${err.message}`));
+    await page.goto(`/play/${pack.id}`);
+    await expect(
+      page.getByTestId('start-play').or(page.getByTestId('relation-display')),
+    ).toBeVisible({ timeout: 15_000 });
+    expect(errors, pack.id).toEqual([]);
+  }
 });
 
 test('integer-ops play loop with Enter', async ({ page }) => {

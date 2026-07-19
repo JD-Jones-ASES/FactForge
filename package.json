@@ -1,7 +1,7 @@
 {
   "name": "factforge",
   "type": "module",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "private": true,
   "homepage": "https://jd-jones-ases.github.io/FactForge/",
   "description": "Modular relation-based math games — given n−1 facts, find the remaining fact",
@@ -22,6 +22,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   }
 }

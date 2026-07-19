@@ -4,25 +4,30 @@ import { frac } from './frac';
 
 describe('parsePiExpr', () => {
   it('parses kπ forms', () => {
-    expect(parsePiExpr('6π').ok && parsePiExpr('6π').value).toEqual(
-      piExpr(6, true),
-    );
-    expect(parsePiExpr('6*pi').ok && parsePiExpr('6*pi').value).toEqual(
-      piExpr(6, true),
-    );
-    expect(parsePiExpr('π').ok && parsePiExpr('π').value).toEqual(
-      piExpr(1, true),
-    );
-    expect(parsePiExpr('3/2π').ok && parsePiExpr('3/2π').value).toEqual({
-      coeff: frac(3, 2),
-      hasPi: true,
-    });
+    const a = parsePiExpr('6π');
+    expect(a.ok).toBe(true);
+    if (a.ok) expect(a.value).toEqual(piExpr(6, true));
+    const b = parsePiExpr('6*pi');
+    expect(b.ok).toBe(true);
+    if (b.ok) expect(b.value).toEqual(piExpr(6, true));
+    const c = parsePiExpr('π');
+    expect(c.ok).toBe(true);
+    if (c.ok) expect(c.value).toEqual(piExpr(1, true));
+    const d = parsePiExpr('3/2π');
+    expect(d.ok).toBe(true);
+    if (d.ok) {
+      expect(d.value).toEqual({
+        coeff: frac(3, 2),
+        hasPi: true,
+      });
+    }
   });
 
   it('rejects bare decimals for pi products', () => {
     // plain rational still ok
-    expect(parsePiExpr('6').ok).toBe(true);
-    expect(parsePiExpr('6').value?.hasPi).toBe(false);
+    const six = parsePiExpr('6');
+    expect(six.ok).toBe(true);
+    if (six.ok) expect(six.value.hasPi).toBe(false);
   });
 
   it('formats', () => {

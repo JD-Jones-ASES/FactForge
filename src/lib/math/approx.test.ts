@@ -7,12 +7,12 @@ import {
 
 describe('approx grading', () => {
   it('parses decimals', () => {
-    expect(parseApproxNumber('3.5').ok && parseApproxNumber('3.5').value).toBe(
-      3.5,
-    );
-    expect(parseApproxNumber('−2.1').ok && parseApproxNumber('−2.1').value).toBe(
-      -2.1,
-    );
+    const a = parseApproxNumber('3.5');
+    expect(a.ok).toBe(true);
+    if (a.ok) expect(a.value).toBe(3.5);
+    const b = parseApproxNumber('−2.1');
+    expect(b.ok).toBe(true);
+    if (b.ok) expect(b.value).toBe(-2.1);
   });
 
   it('uses ±0.05 band', () => {
