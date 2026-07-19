@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { listPacks } from '../lib/engine/registry';
+import { withBase } from '../lib/basePath';
+
+const packs = listPacks();
+---
+
+<Layout title="FactForge — math packs">
+  <section class="hero">
+    <h1>Find the missing fact</h1>
+    <p>
+      Modular drills over relations: given most of the story, supply the rest.
+      Equivalent answers count; unreduced fractions get a gentle nudge unless
+      reducing is the point.
+    </p>
+  </section>
+
+  <section class="pack-grid" aria-label="Game packs">
+    {
+      packs.map((pack) => (
+        <a class="pack-card" href={withBase(`/play/${pack.id}`)} data-pack={pack.id}>
+          <span class="pack-band">{pack.band}</span>
+          <h2>{pack.title}</h2>
+          <p>{pack.blurb}</p>
+          <span class="pack-go">Play →</span>
+        </a>
+      ))
+    }
+  </section>
+</Layout>

@@ -1,0 +1,46 @@
+---
+import '../styles/site.css';
+import { withBase } from '../lib/basePath';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'FactForge',
+  description = 'Modular math games — find the missing fact.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="ink">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href={withBase('/')}>
+        <span class="brand-mark">⟨?⟩</span>
+        <span>FactForge</span>
+        <span class="brand-sub">math packs</span>
+      </a>
+      <nav>
+        <a href={withBase('/')}>Hub</a>
+      </nav>
+    </header>
+    <main class="site-main">
+      <slot />
+    </main>
+  </body>
+</html>

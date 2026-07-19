@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPack, packIds } from '../../lib/engine/registry';
+import { PlayApp } from '../../components/shell/PlayApp';
+import { withBase } from '../../lib/basePath';
+
+export function getStaticPaths() {
+  return packIds().map((packId) => ({ params: { packId } }));
+}
+
+const { packId } = Astro.params;
+const pack = getPack(packId!);
+if (!pack) {
+  return Astro.redirect(withBase('/'));
+}
+---
+
+<Layout title={`${pack.title} · FactForge`} description={pack.blurb}>
+  {/* client:only — full interactive shell; avoids click-before-hydrate flakiness */}
+  <PlayApp client:only="react" packId={pack.id}>
+    <p slot="fallback" class="hint-text">Loading play shell…</p>
+  </PlayApp>
+</Layout>

@@ -1,0 +1,60 @@
+# FactForge
+
+Modular math games built around one idea: **given *n*−1 facts about a relation, find the remaining fact.**
+
+Middle-school arithmetic through intro algebra, over a large subset of the rationals, with **equivalent-answer** grading and gentle form hints (e.g. “correct — reduce to ½”).
+
+## Engineering level: L2 — Product-shaped (lean)
+
+One static site, a pluggable **relation engine**, and **packs** that plug into a shared play shell. Designed so many packs can share one hub; a custom “snap together” builder is planned for v1.1 (schema is pack-driven from day one).
+
+## Stack
+
+- Astro + React islands + TypeScript + pnpm
+- Exact ℚ arithmetic (`src/lib/math`)
+- Vitest (domain) + Playwright (smoke)
+
+## Run
+
+```bash
+pnpm install
+pnpm dev
+```
+
+```bash
+pnpm test
+pnpm build
+pnpm test:e2e   # needs browsers: pnpm exec playwright install chromium
+```
+
+## v1 packs
+
+| Pack | Relation |
+|------|----------|
+| Integer ops | `a ⊕ b = c` |
+| Fraction ops | same over ℚ |
+| Reduce & equivalent | form-focused fractions |
+| Linear one-step | `ax + b = c` |
+| Factor quadratics | expand-check factorizations |
+
+## Theme
+
+Default theme pack: **Ink** — dark, high contrast, single teal accent. Future themes only rebind CSS tokens.
+
+## Add a pack
+
+1. Create `src/lib/packs/my-pack.ts` implementing `RelationPack`
+2. Register in `src/lib/engine/registry.ts`
+3. Hub and `/play/[packId]` pick it up automatically
+
+## Inspiration (not copies)
+
+- [cyber-math-flashcards](https://github.com/JD-Jones-ASES/cyber-math-flashcards)
+- [fraction-flashcards](https://github.com/JD-Jones-ASES/fraction-flashcards)
+- [factoring](https://github.com/JD-Jones-ASES/factoring)
+
+QuestMath’s five-slot idea is conceptual inspiration only; FactForge is a separate static product.
+
+## License
+
+MIT © JD Jones

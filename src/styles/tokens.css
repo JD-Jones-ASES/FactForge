@@ -1,0 +1,87 @@
+/* FactForge design tokens — theme packs rebind these under [data-theme]. */
+:root,
+[data-theme='ink'] {
+  --bg: #0b0e12;
+  --bg-elevated: #12171f;
+  --bg-panel: #161c26;
+  --border: #2a3344;
+  --border-strong: #3d4a62;
+  --fg: #e8edf5;
+  --fg-dim: #9aa8bc;
+  --fg-mute: #6b7a90;
+  --accent: #3ecfbe;
+  --accent-soft: rgba(62, 207, 190, 0.14);
+  --accent-glow: rgba(62, 207, 190, 0.35);
+  --ok: #5bd68a;
+  --ok-soft: rgba(91, 214, 138, 0.14);
+  --warn: #e8c45a;
+  --warn-soft: rgba(232, 196, 90, 0.14);
+  --bad: #f07178;
+  --bad-soft: rgba(240, 113, 120, 0.14);
+  --font-sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', ui-monospace, monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --nav-h: 3.5rem;
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(1000px 500px at 8% -8%, #1a2838 0%, transparent 55%),
+    radial-gradient(800px 400px at 100% 0%, #152028 0%, transparent 45%),
+    var(--bg);
+  color: var(--fg);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--warn);
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--fg);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
