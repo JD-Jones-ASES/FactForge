@@ -8,7 +8,11 @@ export function formatPiExpr(e: PiExpr): string {
   if (e.coeff.n === 0) return '0';
   if (e.coeff.n === 1 && e.coeff.d === 1) return 'π';
   if (e.coeff.n === -1 && e.coeff.d === 1) return '−π';
-  return `${formatFrac(e.coeff)}π`;
+  if (e.coeff.d === 1) return `${formatFrac(e.coeff)}π`;
+  // Fractional coefficient: write kπ/d (e.g. 5π/6, −π/4) rather than 5/6π.
+  const sign = e.coeff.n < 0 ? '−' : '';
+  const k = Math.abs(e.coeff.n);
+  return `${sign}${k === 1 ? '' : k}π/${e.coeff.d}`;
 }
 
 export function piExpr(coeff: Frac | number, hasPi = true): PiExpr {
@@ -17,6 +21,8 @@ export function piExpr(coeff: Frac | number, hasPi = true): PiExpr {
 }
 
 export function eqPi(a: PiExpr, b: PiExpr): boolean {
+  // 0·π and 0 are the same value.
+  if (a.coeff.n === 0 && b.coeff.n === 0) return true;
   return a.hasPi === b.hasPi && eq(a.coeff, b.coeff);
 }
 
@@ -52,6 +58,16 @@ export function parsePiExpr(
     const r = parseRational(pik[1]!);
     if (!r.ok) return { ok: false, message: r.message };
     return { ok: true, value: { coeff: r.value, hasPi: true } };
+  }
+
+  // kπ/d  or  (kπ)/d  or  π/d
+  const kpid = s.replace(/[()]/g, '').match(/^([+-]?\d*)\*?pi\/(\d+)$/);
+  if (kpid) {
+    const kStr = kpid[1] === '' || kpid[1] === '+' ? '1' : kpid[1] === '-' ? '-1' : kpid[1]!;
+    const d = parseInt(kpid[2]!, 10);
+    if (d === 0) return { ok: false, message: 'Denominator cannot be 0' };
+    const k = parseInt(kStr, 10);
+    return { ok: true, value: { coeff: frac(k, d), hasPi: true } };
   }
 
   // plain rational (no pi)

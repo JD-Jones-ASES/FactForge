@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.15.0
+
+- 30 new packs (25 → 55) spanning middle-school arithmetic through pre-calculus
+  - Arithmetic / number: order of operations, decimal ops, mixed ↔ improper, fraction / decimal / percent, prime factorization, exponent rules, scientific notation, percent change
+  - Algebra: linear inequalities, absolute value, slope & intercepts, simplify radicals, solve quadratics, parabola vertex
+  - Functions (new band): function notation & composition, average rate of change, logarithms, arithmetic & geometric sequences
+  - Geometry: polygon angles, area & perimeter, volume & surface area (exact π), arcs & sectors, distance & midpoint
+  - Trig: special right triangles, degrees ↔ radians, reference & coterminal angles, trig ratios from one ratio, inverse trig (choice chips, principal ranges)
+  - Data (new band): mean / median / mode / range, factorials / permutations / combinations
+- Shared math: exact radicals (`a√b/c`), terminating decimals, solution-set / point / inequality parsers; `kπ/d` parsing and display
+- Figures: parabola, 2-D shapes, regular polygons, circle sectors; unit-circle label/caption overrides
+- Hub: Functions and Data bands; insert bars for every new pack; round-trip invariant test (each pack accepts its own expected answer under every config option)
+
 ## 0.14.1
 
 - CI: `pnpm typecheck` (`tsc --noEmit`) before unit/build

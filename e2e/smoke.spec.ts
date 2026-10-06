@@ -3,12 +3,14 @@ import { listPacks } from '../src/lib/engine/registry';
 
 test('hub lists every registered pack', async ({ page }) => {
   const packs = listPacks();
-  expect(packs.length).toBeGreaterThanOrEqual(25);
+  expect(packs.length).toBeGreaterThanOrEqual(55);
 
   await page.goto('/');
   await expect(page.getByRole('heading', { name: /missing fact/i })).toBeVisible();
   await expect(page.locator('[data-band="Arithmetic"]')).toBeVisible();
   await expect(page.locator('[data-band="Algebra"]')).toBeVisible();
+  await expect(page.locator('[data-band="Functions"]')).toBeVisible();
+  await expect(page.locator('[data-band="Data"]')).toBeVisible();
   await expect(page.getByRole('navigation', { name: /jump to band/i })).toBeVisible();
 
   for (const pack of packs) {
@@ -79,4 +81,30 @@ test('pythagorean shows figure', async ({ page }) => {
   await page.getByTestId('start-play').click();
   await expect(page.getByTestId('figure-view')).toBeVisible();
   await expect(page.getByTestId('relation-display')).toBeVisible();
+});
+
+for (const id of ['area-perimeter', 'polygon-angles', 'arc-sector', 'vertex', 'special-right']) {
+  test(`${id} shows figure`, async ({ page }) => {
+    await page.goto(`/play/${id}`);
+    await page.getByTestId('start-play').click();
+    await expect(page.getByTestId('figure-view')).toBeVisible();
+    await expect(page.getByTestId('relation-display')).toBeVisible();
+  });
+}
+
+test('inverse-trig offers angle chips', async ({ page }) => {
+  await page.goto('/play/inverse-trig');
+  await page.getByTestId('start-play').click();
+  await expect(page.getByTestId('choice-bar')).toBeVisible();
+  await expect(page.getByRole('option', { name: '0°', exact: true })).toBeVisible();
+});
+
+test('solve-quad grades a typed solution list', async ({ page }) => {
+  await page.goto('/play/solve-quad');
+  await page.getByTestId('start-play').click();
+  await expect(page.getByTestId('relation-display')).toBeVisible();
+  const input = page.getByTestId('answer-input');
+  await input.fill('x = 1000, -1000');
+  await input.press('Enter');
+  await expect(page.getByTestId('feedback')).toBeVisible();
 });

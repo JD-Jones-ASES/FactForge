@@ -20,6 +20,16 @@ const DEG: InsertToken = { label: '°', insert: '°', title: 'Degree' };
 const YEQ: InsertToken = { label: 'y=', insert: 'y=', title: 'y equals' };
 const X: InsertToken = { label: 'x', insert: 'x', title: 'x' };
 const X2: InsertToken = { label: 'x²', insert: 'x^2', title: 'x squared' };
+const CARET: InsertToken = { label: '^', insert: '^', title: 'Exponent' };
+const DOT: InsertToken = { label: '·', insert: '·', title: 'Times' };
+const COMMA: InsertToken = { label: ',', insert: ', ', title: 'Separator' };
+const EQ: InsertToken = { label: 'x=', insert: 'x = ', title: 'x equals' };
+const LT: InsertToken = { label: '<', insert: '<', title: 'Less than' };
+const GT: InsertToken = { label: '>', insert: '>', title: 'Greater than' };
+const LE: InsertToken = { label: '≤', insert: '≤', title: 'Less or equal' };
+const GE: InsertToken = { label: '≥', insert: '≥', title: 'Greater or equal' };
+const PCT: InsertToken = { label: '%', insert: '%', title: 'Percent' };
+const E10: InsertToken = { label: '×10^', insert: ' × 10^', title: 'Times ten to the' };
 
 /** Pack-specific insert rows (shown first, then kind defaults). */
 const PACK_INSERTS: Record<string, InsertToken[]> = {
@@ -42,6 +52,41 @@ const PACK_INSERTS: Record<string, InsertToken[]> = {
   'right-trig': [SLASH, MINUS, DEG],
   'unit-circle': [SQRT, SLASH, MINUS, PI],
   pythagorean: [MINUS],
+  // Arithmetic / number
+  'order-ops': [MINUS, SLASH],
+  'decimal-ops': [MINUS],
+  'mixed-improper': [SLASH, MINUS],
+  'frac-dec-pct': [SLASH, PCT, MINUS],
+  'prime-factor': [CARET, DOT, LPAREN, RPAREN],
+  'exponent-laws': [CARET, SLASH, MINUS],
+  'sci-notation': [E10, MINUS],
+  'percent-change': [PCT, MINUS, SLASH],
+  // Algebra
+  'linear-ineq': [X, LT, GT, LE, GE, SLASH, MINUS],
+  'abs-value': [EQ, COMMA, SLASH, MINUS],
+  'slope-intercepts': [SLASH, MINUS, LPAREN, RPAREN, COMMA],
+  'simplify-radical': [SQRT, SLASH, MINUS],
+  'solve-quad': [EQ, COMMA, SLASH, MINUS],
+  vertex: [LPAREN, RPAREN, COMMA, X, X2, PLUS, MINUS, SLASH],
+  // Functions
+  'func-eval': [SLASH, MINUS],
+  'avg-rate': [SLASH, MINUS],
+  logs: [SLASH, MINUS],
+  sequences: [SLASH, MINUS],
+  // Geometry
+  'polygon-angles': [DEG, SLASH],
+  'area-perimeter': [SLASH, MINUS],
+  volume: [PI, SLASH],
+  'arc-sector': [PI, SLASH, DEG],
+  'distance-midpoint': [SQRT, LPAREN, RPAREN, COMMA, SLASH, MINUS],
+  // Trig
+  'special-right': [SQRT, SLASH, MINUS],
+  'deg-rad': [PI, SLASH, DEG, MINUS],
+  'ref-angle': [PI, SLASH, DEG, MINUS],
+  'trig-identity': [SLASH, MINUS],
+  // Data
+  'data-stats': [SLASH, MINUS],
+  counting: [],
 };
 
 function kindDefaults(kind: SlotKind): InsertToken[] {

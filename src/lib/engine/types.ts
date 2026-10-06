@@ -131,6 +131,10 @@ export type FigureSpec =
       kind: 'unit-circle';
       deg: number;
       fn: string;
+      /** Override the angle label on the ray (default `${deg}°`). */
+      label?: string;
+      /** Override the caption (default `${fn}(${deg}°) on the unit circle`). */
+      caption?: string;
     }
   | {
       kind: 'right-triangle';
@@ -143,6 +147,41 @@ export type FigureSpec =
       omitTheta?: boolean;
       /** Override default adj/opp/hyp captions (e.g. side lengths). */
       sideCaptions?: { adj: string; opp: string; hyp: string };
+    }
+  | {
+      kind: 'parabola';
+      /** y = a(x − h)² + k (floats for draw only). */
+      a: number;
+      h: number;
+      k: number;
+      markVertex?: boolean;
+    }
+  | {
+      kind: 'shape-2d';
+      shape: 'rectangle' | 'square' | 'triangle' | 'parallelogram' | 'trapezoid';
+      /** Layout measures (float OK): base/width, height, optional top (trapezoid) and slant. */
+      base: number;
+      height: number;
+      top?: number;
+      /** Captions: base (bottom), height (dashed), top, left side, right side. Use '?' for hidden. */
+      labels: { base?: string; height?: string; top?: string; left?: string; right?: string };
+    }
+  | {
+      kind: 'regular-polygon';
+      sides: number;
+      /** Label at one interior angle; '?' hides. */
+      interiorLabel?: string;
+      /** Label at one exterior angle; '?' hides. */
+      exteriorLabel?: string;
+    }
+  | {
+      kind: 'sector';
+      /** Central angle in degrees (layout). */
+      deg: number;
+      angleLabel: string;
+      rLabel: string;
+      /** Highlight the arc (arc-length questions) vs the wedge (area). */
+      emphasis: 'arc' | 'area';
     };
 
 /** Optional choice chip for packs with inputKind === 'choice'. */

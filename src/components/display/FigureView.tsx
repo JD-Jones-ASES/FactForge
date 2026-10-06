@@ -38,7 +38,245 @@ export function FigureView({ figure }: { figure: FigureSpec }) {
   if (figure.kind === 'right-triangle') {
     return <RightTriangleFigure figure={figure} />;
   }
+  if (figure.kind === 'parabola') {
+    return <ParabolaFigure figure={figure} />;
+  }
+  if (figure.kind === 'shape-2d') {
+    return <Shape2dFigure figure={figure} />;
+  }
+  if (figure.kind === 'regular-polygon') {
+    return <RegularPolygonFigure figure={figure} />;
+  }
+  if (figure.kind === 'sector') {
+    return <SectorFigure figure={figure} />;
+  }
   return null;
+}
+
+function ParabolaFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'parabola' }>;
+}) {
+  const W = 240;
+  const H = 240;
+  const pad = 20;
+  // Centre the view on the vertex so the curve always shows its turning point.
+  const span = 8;
+  const xMin = figure.h - span;
+  const xMax = figure.h + span;
+  const yMin = figure.k - span;
+  const yMax = figure.k + span;
+  const toX = (x: number) => pad + ((x - xMin) / (xMax - xMin)) * (W - 2 * pad);
+  const toY = (y: number) => H - pad - ((y - yMin) / (yMax - yMin)) * (H - 2 * pad);
+  const pts: string[] = [];
+  const steps = 64;
+  for (let i = 0; i <= steps; i++) {
+    const x = xMin + ((xMax - xMin) * i) / steps;
+    const y = figure.a * (x - figure.h) ** 2 + figure.k;
+    if (y < yMin - span || y > yMax + span) continue;
+    pts.push(`${toX(x).toFixed(1)},${toY(y).toFixed(1)}`);
+  }
+  const axisX = Math.min(W - pad, Math.max(pad, toX(0)));
+  const axisY = Math.min(H - pad, Math.max(pad, toY(0)));
+  const vx = toX(figure.h);
+  const vy = toY(figure.k);
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg className="figure-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label="Parabola">
+        <line x1={pad} y1={axisY} x2={W - pad} y2={axisY} stroke="var(--border-strong)" strokeWidth="1" />
+        <line x1={axisX} y1={pad} x2={axisX} y2={H - pad} stroke="var(--border-strong)" strokeWidth="1" />
+        <polyline points={pts.join(' ')} fill="none" stroke="var(--accent)" strokeWidth="2" />
+        <line x1={vx} y1={pad} x2={vx} y2={H - pad} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="4 4" opacity={0.6} />
+        {figure.markVertex && <circle cx={vx} cy={vy} r="4" fill="var(--warn)" />}
+      </svg>
+    </div>
+  );
+}
+
+function Shape2dFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'shape-2d' }>;
+}) {
+  const W = 260;
+  const H = 200;
+  const pad = 34;
+  const maxW = W - 2 * pad;
+  const maxH = H - 2 * pad;
+  const scale = Math.min(maxW / Math.max(figure.base, figure.top ?? 0), maxH / figure.height);
+  const bw = figure.base * scale;
+  const bh = figure.height * scale;
+  const x0 = (W - bw) / 2;
+  const yBot = H - pad;
+  const yTop = yBot - bh;
+  let points: [number, number][];
+  if (figure.shape === 'triangle') {
+    const apexX = x0 + bw * 0.35;
+    points = [
+      [x0, yBot],
+      [x0 + bw, yBot],
+      [apexX, yTop],
+    ];
+  } else if (figure.shape === 'parallelogram') {
+    const skew = Math.min(30, bw * 0.3);
+    points = [
+      [x0, yBot],
+      [x0 + bw, yBot],
+      [x0 + bw + skew, yTop],
+      [x0 + skew, yTop],
+    ];
+  } else if (figure.shape === 'trapezoid') {
+    const tw = (figure.top ?? figure.base / 2) * scale;
+    const tx = x0 + (bw - tw) / 2;
+    points = [
+      [x0, yBot],
+      [x0 + bw, yBot],
+      [tx + tw, yTop],
+      [tx, yTop],
+    ];
+  } else {
+    points = [
+      [x0, yBot],
+      [x0 + bw, yBot],
+      [x0 + bw, yTop],
+      [x0, yTop],
+    ];
+  }
+  const poly = points.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const cx = W / 2;
+  const heightX = figure.shape === 'triangle' ? x0 + bw * 0.35 : figure.shape === 'parallelogram' ? x0 + bw * 0.55 : null;
+  const L = figure.labels;
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg className="figure-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={figure.shape}>
+        <polygon points={poly} fill="var(--accent-soft)" stroke="var(--accent)" strokeWidth="2" />
+        {heightX !== null && L.height && (
+          <line x1={heightX} y1={yTop} x2={heightX} y2={yBot} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="4 4" />
+        )}
+        {L.base && (
+          <text x={cx} y={yBot + 18} className="figure-vertex" textAnchor="middle">
+            {L.base}
+          </text>
+        )}
+        {L.top && (
+          <text x={cx} y={yTop - 8} className="figure-vertex" textAnchor="middle">
+            {L.top}
+          </text>
+        )}
+        {L.height && (
+          <text
+            x={(heightX ?? x0) - 8}
+            y={(yTop + yBot) / 2}
+            className="figure-vertex"
+            textAnchor="end"
+            dominantBaseline="middle"
+          >
+            {L.height}
+          </text>
+        )}
+        {L.left && (
+          <text x={Math.max(10, x0 - 8)} y={(yTop + yBot) / 2} className="figure-vertex" textAnchor="end" dominantBaseline="middle">
+            {L.left}
+          </text>
+        )}
+        {L.right && (
+          <text x={Math.min(W - 10, x0 + bw + 10)} y={(yTop + yBot) / 2} className="figure-vertex" dominantBaseline="middle">
+            {L.right}
+          </text>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+function RegularPolygonFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'regular-polygon' }>;
+}) {
+  const W = 240;
+  const H = 240;
+  const cx = 120;
+  const cy = 124;
+  const R = 78;
+  const n = Math.max(3, figure.sides);
+  const verts: [number, number][] = [];
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+    verts.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]);
+  }
+  const poly = verts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  // Label the interior angle at the top vertex, exterior at the next one.
+  const [tx, ty] = verts[0]!;
+  const [ex, ey] = verts[1]!;
+  // extend side from verts[0] through verts[1] past verts[1]
+  const dx = ex - tx;
+  const dy = ey - ty;
+  const len = Math.hypot(dx, dy) || 1;
+  const extX = ex + (dx / len) * 34;
+  const extY = ey + (dy / len) * 34;
+  const inner = clampPt({ x: tx, y: ty + 26 }, W, 14);
+  const outer = clampPt({ x: ex + 26, y: ey - 4 }, W, 14);
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg className="figure-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={`Regular ${n}-gon`}>
+        <polygon points={poly} fill="var(--accent-soft)" stroke="var(--accent)" strokeWidth="2" />
+        {figure.exteriorLabel && (
+          <>
+            <line x1={ex} y1={ey} x2={extX} y2={extY} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="4 3" />
+            <AngleLabel x={outer.x} y={outer.y} text={figure.exteriorLabel} hidden={figure.exteriorLabel === '?'} />
+          </>
+        )}
+        {figure.interiorLabel && (
+          <AngleLabel x={inner.x} y={inner.y} text={figure.interiorLabel} hidden={figure.interiorLabel === '?'} />
+        )}
+        <text x={cx} y={cy + 4} className="figure-vertex" textAnchor="middle" opacity={0.7}>
+          n = {n}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+function SectorFigure({
+  figure,
+}: {
+  figure: Extract<FigureSpec, { kind: 'sector' }>;
+}) {
+  const W = 240;
+  const H = 240;
+  const cx = 120;
+  const cy = 128;
+  const R = 86;
+  const deg = Math.min(359.9, Math.max(1, figure.deg));
+  const a0 = 0;
+  const a1 = (deg * Math.PI) / 180;
+  const x1 = cx + R * Math.cos(a0);
+  const y1 = cy - R * Math.sin(a0);
+  const x2 = cx + R * Math.cos(a1);
+  const y2 = cy - R * Math.sin(a1);
+  const large = deg > 180 ? 1 : 0;
+  const wedge = `M ${cx} ${cy} L ${x1} ${y1} A ${R} ${R} 0 ${large} 0 ${x2} ${y2} Z`;
+  const arc = `M ${x1} ${y1} A ${R} ${R} 0 ${large} 0 ${x2} ${y2}`;
+  const mid = a1 / 2;
+  const lab = clampPt({ x: cx + 34 * Math.cos(mid), y: cy - 34 * Math.sin(mid) }, W, 14);
+  // Radius label hangs under the initial (horizontal) radius for wedges up to a half turn;
+  // for reflex wedges that side is covered, so it sits above instead.
+  const rLab = { x: cx + R * 0.55, y: deg <= 180 ? cy + 13 : cy - 11 };
+  return (
+    <div className="figure-wrap" data-testid="figure-view">
+      <svg className="figure-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label="Circle sector">
+        <circle cx={cx} cy={cy} r={R} fill="none" stroke="var(--border-strong)" strokeWidth="1" opacity={0.5} />
+        <path d={wedge} fill={figure.emphasis === 'area' ? 'var(--accent-soft)' : 'none'} stroke="var(--accent)" strokeWidth="1.5" />
+        <path d={arc} fill="none" stroke="var(--accent)" strokeWidth={figure.emphasis === 'arc' ? 4 : 1.5} />
+        <AngleLabel x={lab.x} y={lab.y} text={figure.angleLabel} hidden={figure.angleLabel === '?'} unit="" />
+        <text x={rLab.x} y={rLab.y} className="figure-vertex" textAnchor="middle" dominantBaseline="middle">
+          {figure.rLabel}
+        </text>
+      </svg>
+    </div>
+  );
 }
 
 function UnitCircleFigure({
@@ -87,14 +325,14 @@ function UnitCircleFigure({
           textAnchor="middle"
           dominantBaseline="middle"
         >
-          {figure.deg}°
+          {figure.label ?? `${figure.deg}°`}
         </text>
         <text x={cx + R + 4} y={cy - 6} className="figure-vertex">
           1
         </text>
       </svg>
       <p className="figure-caption">
-        {figure.fn}({figure.deg}°) on the unit circle
+        {figure.caption ?? `${figure.fn}(${figure.deg}°) on the unit circle`}
       </p>
     </div>
   );
