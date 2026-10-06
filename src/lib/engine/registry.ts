@@ -31,6 +31,9 @@ import { fracDecPctPack } from '../packs/frac-dec-pct';
 import { primeFactorPack } from '../packs/prime-factor';
 import { exponentLawsPack } from '../packs/exponent-laws';
 import { sciNotationPack } from '../packs/sci-notation';
+import { percentChangePack } from '../packs/percent-change';
+import { dataStatsPack } from '../packs/data-stats';
+import { countingPack } from '../packs/counting';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -47,6 +50,7 @@ const packs: RelationPack<any>[] = [
   sciNotationPack,
   proportionPack,
   percentOfPack,
+  percentChangePack,
   rationalizePack,
   linearOnePack,
   linearWritePack,
@@ -66,6 +70,8 @@ const packs: RelationPack<any>[] = [
   pythagoreanPack,
   unitCirclePack,
   rightTrigPack,
+  dataStatsPack,
+  countingPack,
 ];
 
 export function listPacks(): RelationPack[] {
