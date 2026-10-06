@@ -54,6 +54,16 @@ export function parsePiExpr(
     return { ok: true, value: { coeff: r.value, hasPi: true } };
   }
 
+  // kπ/d  or  (kπ)/d  or  π/d
+  const kpid = s.replace(/[()]/g, '').match(/^([+-]?\d*)\*?pi\/(\d+)$/);
+  if (kpid) {
+    const kStr = kpid[1] === '' || kpid[1] === '+' ? '1' : kpid[1] === '-' ? '-1' : kpid[1]!;
+    const d = parseInt(kpid[2]!, 10);
+    if (d === 0) return { ok: false, message: 'Denominator cannot be 0' };
+    const k = parseInt(kStr, 10);
+    return { ok: true, value: { coeff: frac(k, d), hasPi: true } };
+  }
+
   // plain rational (no pi)
   const r = parseRational(s);
   if (r.ok) return { ok: true, value: { coeff: r.value, hasPi: false } };

@@ -44,6 +44,12 @@ import { funcEvalPack } from '../packs/func-eval';
 import { avgRatePack } from '../packs/avg-rate';
 import { logsPack } from '../packs/logs';
 import { sequencesPack } from '../packs/sequences';
+import { polygonAnglesPack } from '../packs/polygon-angles';
+import { areaPerimeterPack } from '../packs/area-perimeter';
+import { volumePack } from '../packs/volume';
+import { arcSectorPack } from '../packs/arc-sector';
+import { distanceMidpointPack } from '../packs/distance-midpoint';
+import { specialRightPack } from '../packs/special-right';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -86,8 +92,14 @@ const packs: RelationPack<any>[] = [
   supplementaryPack,
   exteriorAnglePack,
   transversalPack,
+  polygonAnglesPack,
+  areaPerimeterPack,
   circlesPack,
+  arcSectorPack,
+  volumePack,
   pythagoreanPack,
+  distanceMidpointPack,
+  specialRightPack,
   unitCirclePack,
   rightTrigPack,
   dataStatsPack,

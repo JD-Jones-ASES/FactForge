@@ -37,6 +37,15 @@ export function eqRadical(a: Radical, b: Radical): boolean {
   return eq(sa.coef, sb.coef) && (sa.coef.n === 0 || sa.rad === sb.rad);
 }
 
+export function mulRadical(a: Radical, b: Radical): Radical {
+  return simplifyRadical(mul(a.coef, b.coef), a.rad * b.rad);
+}
+
+/** Multiply by a rational scalar. */
+export function scaleRadical(r: Radical, k: Frac): Radical {
+  return simplifyRadical(mul(r.coef, k), r.rad);
+}
+
 export function radicalToNumber(r: Radical): number {
   return (r.coef.n / r.coef.d) * Math.sqrt(r.rad);
 }
