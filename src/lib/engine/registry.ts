@@ -40,6 +40,10 @@ import { absValuePack } from '../packs/abs-value';
 import { simplifyRadicalPack } from '../packs/simplify-radical';
 import { solveQuadPack } from '../packs/solve-quad';
 import { vertexPack } from '../packs/vertex';
+import { funcEvalPack } from '../packs/func-eval';
+import { avgRatePack } from '../packs/avg-rate';
+import { logsPack } from '../packs/logs';
+import { sequencesPack } from '../packs/sequences';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -70,7 +74,11 @@ const packs: RelationPack<any>[] = [
   rootsPack,
   simplifyRadicalPack,
   rationalizePack,
+  funcEvalPack,
   vertexPack,
+  avgRatePack,
+  logsPack,
+  sequencesPack,
   triangleSumPack,
   linearPairPack,
   verticalAnglesPack,
