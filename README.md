@@ -1,8 +1,8 @@
 # FactForge
 
-**v0.14** · Modular math drills built around one idea: **given *n*−1 facts about a relation, find the remaining fact.**
+**v0.15** · Modular math drills built around one idea: **given *n*−1 facts about a relation, find the remaining fact.**
 
-Middle school through intro algebra and trig. Most packs grade **exactly** over rationals (plus π, radicals, and discrete unit-circle values). Equivalent answers count; unreduced fractions get a gentle form nudge unless reducing is the point.
+Middle school arithmetic through the high school topics that feed into calculus — functions, logs, sequences, trig identities, inverse trig — with knobs to tailor each drill. Most packs grade **exactly** over rationals (plus π, radicals, and discrete unit-circle values). Equivalent answers count; unreduced fractions get a gentle form nudge unless reducing is the point.
 
 **Live site:** [https://jd-jones-ases.github.io/FactForge/](https://jd-jones-ases.github.io/FactForge/)
 
@@ -17,20 +17,24 @@ Sibling projects: [Algebra Lab](https://github.com/JD-Jones-ASES/Algebra-Lab) ·
 | **Insert bar** | Pack-aware tokens (`π`, `√`, `y=`, `°`, …) |
 | **Builder** | `/builder` — knobs → shareable setup/play URL or JSON (static, no account) |
 | **Themes** | **Ink** (default dark) and **Paper** (light) |
-| **Figures** | SVG for geometry, systems graphs, unit circle, right triangles |
+| **Figures** | SVG for geometry (angles, polygons, 2-D shapes, sectors), systems graphs, parabolas, unit circle, right triangles |
 | **Presets** | `?c=<base64url>&play=1` on any pack |
 
-## Packs (25)
+## Packs (55)
 
 | Band | Packs |
 |------|--------|
-| Arithmetic | Integer ops |
-| Fractions | Fraction ops · Reduce & equivalent |
-| Number structure | GCF & LCM |
-| Proportional | Proportions · Percent of |
-| Algebra | Rationalize · Linear equations · Write a line · Linear systems · Factor · Expand · Powers · Roots |
-| Geometry | Triangle · Linear pair · Vertical · Complementary · Supplementary · Exterior · Transversal · Circles · Pythagorean |
-| Trig | Unit circle (sin/cos/tan/sec/csc/cot, °/rad, choice chips + Undefined) · Right-triangle trig (±0.05) |
+| Arithmetic | Integer ops · Order of operations · Decimal ops |
+| Fractions | Fraction ops · Reduce & equivalent · Mixed ↔ improper · Fraction / decimal / percent |
+| Number structure | GCF & LCM · Prime factorization · Exponent rules · Scientific notation |
+| Proportional | Proportions · Percent of · Percent change |
+| Algebra | Linear equations · Linear inequalities · Absolute value · Slope & intercepts · Write a line · Linear systems · Expand · Factor · Solve quadratics · Powers · Roots · Simplify radicals · Rationalize |
+| Functions | Function notation & composition · Parabola vertex · Average rate of change · Logarithms · Sequences |
+| Geometry | Triangle · Linear pair · Vertical · Complementary · Supplementary · Exterior · Transversal · Polygon angles · Area & perimeter · Circles · Arcs & sectors · Volume & surface area · Pythagorean · Distance & midpoint |
+| Trig | Special right triangles · Degrees ↔ radians · Reference & coterminal angles · Unit circle (choice chips + Undefined) · Trig ratios from one ratio · Inverse trig (choice chips) · Right-triangle trig (±0.05) |
+| Data | Mean / median / mode / range · Factorials, permutations & combinations |
+
+Every pack exposes config knobs (operand ranges, sub-skills, angle units, which fact is hidden, …) that the **Builder** turns into shareable preset links.
 
 ## Stack
 
