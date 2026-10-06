@@ -24,13 +24,27 @@ import { linearSystemPack } from '../packs/linear-system';
 import { unitCirclePack } from '../packs/unit-circle';
 import { rightTrigPack } from '../packs/right-trig';
 import { pythagoreanPack } from '../packs/pythagorean';
+import { orderOpsPack } from '../packs/order-ops';
+import { decimalOpsPack } from '../packs/decimal-ops';
+import { mixedImproperPack } from '../packs/mixed-improper';
+import { fracDecPctPack } from '../packs/frac-dec-pct';
+import { primeFactorPack } from '../packs/prime-factor';
+import { exponentLawsPack } from '../packs/exponent-laws';
+import { sciNotationPack } from '../packs/sci-notation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
   integerOpsPack,
+  orderOpsPack,
+  decimalOpsPack,
   fractionOpsPack,
   reduceEquivPack,
+  mixedImproperPack,
+  fracDecPctPack,
   gcfLcmPack,
+  primeFactorPack,
+  exponentLawsPack,
+  sciNotationPack,
   proportionPack,
   percentOfPack,
   rationalizePack,
