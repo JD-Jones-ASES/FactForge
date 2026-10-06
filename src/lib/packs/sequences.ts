@@ -166,7 +166,7 @@ export const sequencesPack: RelationPack<SequencesConfig> = {
       prompt,
       pieces: [
         { kind: 'slot', slotId: 'terms', text: String(instance.slots.terms!.v), hidden: false },
-        { kind: 'text', text: `   ${label}` },
+        { kind: 'text', text: `;   ${label}` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
     };

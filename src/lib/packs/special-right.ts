@@ -135,7 +135,8 @@ export const specialRightPack: RelationPack<SpecialRightConfig> = {
     const all = instance.meta?.all as Record<Side, Radical>;
     const name = (s: Side) =>
       tri === '45' ? (s === 'hyp' ? 'hypotenuse' : 'leg') : s === 'hyp' ? 'hypotenuse' : s === 'short' ? 'short leg (opposite 30°)' : 'long leg (opposite 60°)';
-    const cap = (s: Side) => (s === givenSide ? String(n) : s === askSide ? '?' : formatRadical(all[s]));
+    // Only the given side and the target are labelled; showing the third side would collapse the problem.
+    const cap = (s: Side) => (s === givenSide ? String(n) : s === askSide ? '?' : '');
     const ratio = tri === '45' ? 'x : x : x√2' : 'x : x√3 : 2x';
     return {
       prompt: `${tri === '45' ? '45-45-90' : '30-60-90'} triangle (${ratio}). Given the ${name(givenSide)} = ${n}, find the ${name(askSide)}.`,

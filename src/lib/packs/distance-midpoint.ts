@@ -111,15 +111,17 @@ export const distanceMidpointPack: RelationPack<DistanceMidpointConfig> = {
     const mid: [Frac, Frac] = [frac(x1 + x2, 2), frac(y1 + y2, 2)];
     let points: string;
     let answer: string;
+    const A = formatPoint([fromInt(x1), fromInt(y1)]);
+    const B = formatPoint([fromInt(x2), fromInt(y2)]);
     if (mode === 'distance') {
-      points = `(${x1}, ${y1}) and (${x2}, ${y2})`;
+      points = `${A} and ${B}`;
       answer = formatRadical(dist);
     } else if (mode === 'midpoint') {
-      points = `(${x1}, ${y1}) and (${x2}, ${y2})`;
+      points = `${A} and ${B}`;
       answer = formatPoint(mid);
     } else {
-      points = `endpoint (${x1}, ${y1}), midpoint ${formatPoint(mid)}`;
-      answer = `(${x2}, ${y2})`;
+      points = `endpoint ${A}, midpoint ${formatPoint(mid)}`;
+      answer = B;
     }
     return {
       slots: {
@@ -189,7 +191,7 @@ export const distanceMidpointPack: RelationPack<DistanceMidpointConfig> = {
       prompt,
       pieces: [
         { kind: 'slot', slotId: 'points', text: String(instance.slots.points!.v), hidden: false },
-        { kind: 'text', text: `    ${label}` },
+        { kind: 'text', text: `;   ${label}` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
       figure: {

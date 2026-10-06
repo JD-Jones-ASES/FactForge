@@ -143,7 +143,7 @@ export const vertexPack: RelationPack<VertexConfig> = {
       prompt,
       pieces: [
         { kind: 'slot', slotId: 'given', text: String(instance.slots.given!.v), hidden: false },
-        { kind: 'text', text: `   ${label}` },
+        { kind: 'text', text: `;   ${label}` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
       figure: { kind: 'parabola', a, h, k, markVertex: mode !== 'vertex' && mode !== 'axis' },

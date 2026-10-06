@@ -252,9 +252,9 @@ export const areaPerimeterPack: RelationPack<AreaPerimeterConfig> = {
       };
     }
     return {
-      prompt,
+      prompt: `${prompt}   ·   ${m.formula}`,
       pieces: [
-        { kind: 'text', text: `${m.formula}    ${given}    ${label}` },
+        { kind: 'text', text: `${given};   ${label}` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
       figure,

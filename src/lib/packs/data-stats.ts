@@ -141,7 +141,7 @@ export const dataStatsPack: RelationPack<DataStatsConfig> = {
       prompt: `Find the ${stat}`,
       pieces: [
         { kind: 'slot', slotId: 'data', text: String(instance.slots.data!.v), hidden: false },
-        { kind: 'text', text: `   ${stat} = ` },
+        { kind: 'text', text: `;   ${stat} = ` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
     };

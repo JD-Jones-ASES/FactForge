@@ -152,7 +152,7 @@ export const slopeInterceptsPack: RelationPack<SlopeInterceptsConfig> = {
       prompt,
       pieces: [
         { kind: 'slot', slotId: 'given', text: given, hidden: false },
-        { kind: 'text', text: `   ${label} = ` },
+        { kind: 'text', text: `;   ${label} = ` },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
       figure,

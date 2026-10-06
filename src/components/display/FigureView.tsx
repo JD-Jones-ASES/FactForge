@@ -261,14 +261,16 @@ function SectorFigure({
   const arc = `M ${x1} ${y1} A ${R} ${R} 0 ${large} 0 ${x2} ${y2}`;
   const mid = a1 / 2;
   const lab = clampPt({ x: cx + 34 * Math.cos(mid), y: cy - 34 * Math.sin(mid) }, W, 14);
-  const rLab = { x: cx + (R / 2) * Math.cos(a1) - 10 * Math.sin(a1), y: cy - (R / 2) * Math.sin(a1) - 10 * Math.cos(a1) };
+  // Radius label hangs under the initial (horizontal) radius for wedges up to a half turn;
+  // for reflex wedges that side is covered, so it sits above instead.
+  const rLab = { x: cx + R * 0.55, y: deg <= 180 ? cy + 13 : cy - 11 };
   return (
     <div className="figure-wrap" data-testid="figure-view">
       <svg className="figure-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label="Circle sector">
         <circle cx={cx} cy={cy} r={R} fill="none" stroke="var(--border-strong)" strokeWidth="1" opacity={0.5} />
         <path d={wedge} fill={figure.emphasis === 'area' ? 'var(--accent-soft)' : 'none'} stroke="var(--accent)" strokeWidth="1.5" />
         <path d={arc} fill="none" stroke="var(--accent)" strokeWidth={figure.emphasis === 'arc' ? 4 : 1.5} />
-        <AngleLabel x={lab.x} y={lab.y} text={figure.angleLabel} hidden={figure.angleLabel === '?'} />
+        <AngleLabel x={lab.x} y={lab.y} text={figure.angleLabel} hidden={figure.angleLabel === '?'} unit="" />
         <text x={rLab.x} y={rLab.y} className="figure-vertex" textAnchor="middle" dominantBaseline="middle">
           {figure.rLabel}
         </text>

@@ -169,9 +169,9 @@ export const volumePack: RelationPack<VolumeConfig> = {
     const label = m.measure === 'volume' ? 'V = ' : 'SA = ';
     const name = m.solid === 'prism' ? 'rectangular prism' : m.solid;
     return {
-      prompt: `Find the ${m.measure === 'volume' ? 'volume' : 'surface area'} of the ${name}`,
+      prompt: `Find the ${m.measure === 'volume' ? 'volume' : 'surface area'} of the ${name}   ·   ${m.formula}`,
       pieces: [
-        { kind: 'slot', slotId: 'given', text: `${m.formula}    ${m.dims}    ${label}`, hidden: false },
+        { kind: 'slot', slotId: 'given', text: `${m.dims};   ${label}`, hidden: false },
         { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
       ],
     };

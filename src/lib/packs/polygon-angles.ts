@@ -128,12 +128,7 @@ export const polygonAnglesPack: RelationPack<PolygonAnglesConfig> = {
           { kind: 'text', text: 'n = ' },
           { kind: 'slot', slotId: 'answer', text: '?', hidden: true },
         ],
-        figure: {
-          kind: 'regular-polygon',
-          sides: n,
-          interiorLabel: givenExterior ? undefined : interior,
-          exteriorLabel: givenExterior ? exterior : undefined,
-        },
+        // No figure here: drawing the polygon would let the player count the sides.
       };
     }
     const prompt =

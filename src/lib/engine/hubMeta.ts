@@ -18,9 +18,17 @@ const FIGURE = new Set([
   'unit-circle',
   'right-trig',
   'pythagorean',
+  'slope-intercepts',
+  'vertex',
+  'polygon-angles',
+  'area-perimeter',
+  'arc-sector',
+  'distance-midpoint',
+  'special-right',
+  'ref-angle',
 ]);
 
-const CHIPS = new Set(['unit-circle']);
+const CHIPS = new Set(['unit-circle', 'inverse-trig']);
 
 const APPROX = new Set(['right-trig']);
 
