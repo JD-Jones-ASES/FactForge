@@ -323,14 +323,14 @@ function UnitCircleFigure({
           textAnchor="middle"
           dominantBaseline="middle"
         >
-          {figure.deg}°
+          {figure.label ?? `${figure.deg}°`}
         </text>
         <text x={cx + R + 4} y={cy - 6} className="figure-vertex">
           1
         </text>
       </svg>
       <p className="figure-caption">
-        {figure.fn}({figure.deg}°) on the unit circle
+        {figure.caption ?? `${figure.fn}(${figure.deg}°) on the unit circle`}
       </p>
     </div>
   );

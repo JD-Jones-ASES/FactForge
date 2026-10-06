@@ -50,6 +50,10 @@ import { volumePack } from '../packs/volume';
 import { arcSectorPack } from '../packs/arc-sector';
 import { distanceMidpointPack } from '../packs/distance-midpoint';
 import { specialRightPack } from '../packs/special-right';
+import { degRadPack } from '../packs/deg-rad';
+import { refAnglePack } from '../packs/ref-angle';
+import { trigIdentityPack } from '../packs/trig-identity';
+import { inverseTrigPack } from '../packs/inverse-trig';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -100,7 +104,11 @@ const packs: RelationPack<any>[] = [
   pythagoreanPack,
   distanceMidpointPack,
   specialRightPack,
+  degRadPack,
+  refAnglePack,
   unitCirclePack,
+  trigIdentityPack,
+  inverseTrigPack,
   rightTrigPack,
   dataStatsPack,
   countingPack,

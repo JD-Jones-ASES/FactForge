@@ -131,6 +131,10 @@ export type FigureSpec =
       kind: 'unit-circle';
       deg: number;
       fn: string;
+      /** Override the angle label on the ray (default `${deg}°`). */
+      label?: string;
+      /** Override the caption (default `${fn}(${deg}°) on the unit circle`). */
+      caption?: string;
     }
   | {
       kind: 'right-triangle';
