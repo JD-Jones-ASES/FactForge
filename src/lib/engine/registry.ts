@@ -34,6 +34,12 @@ import { sciNotationPack } from '../packs/sci-notation';
 import { percentChangePack } from '../packs/percent-change';
 import { dataStatsPack } from '../packs/data-stats';
 import { countingPack } from '../packs/counting';
+import { linearIneqPack } from '../packs/linear-ineq';
+import { slopeInterceptsPack } from '../packs/slope-intercepts';
+import { absValuePack } from '../packs/abs-value';
+import { simplifyRadicalPack } from '../packs/simplify-radical';
+import { solveQuadPack } from '../packs/solve-quad';
+import { vertexPack } from '../packs/vertex';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const packs: RelationPack<any>[] = [
@@ -51,14 +57,20 @@ const packs: RelationPack<any>[] = [
   proportionPack,
   percentOfPack,
   percentChangePack,
-  rationalizePack,
   linearOnePack,
+  linearIneqPack,
+  absValuePack,
+  slopeInterceptsPack,
   linearWritePack,
   linearSystemPack,
-  factorQuadPack,
   expandQuadPack,
+  factorQuadPack,
+  solveQuadPack,
   powersPack,
   rootsPack,
+  simplifyRadicalPack,
+  rationalizePack,
+  vertexPack,
   triangleSumPack,
   linearPairPack,
   verticalAnglesPack,
